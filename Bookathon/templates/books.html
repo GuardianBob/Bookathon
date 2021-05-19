@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap 4.6 CSS, JQuery, AJAX all-in-one -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- ===============  The Section Needed for Popup Dialog ========================== -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- =============================================================================== -->
+
+    
+
+    <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
+    <title>Document</title>    
+    <script>
+        $(document).ready(function() {
+    // ====================== Required for Popup =================================
+            $("#dialog" ).dialog({
+                autoOpen: false,
+                width: 400,
+                buttons: [
+                    {
+                        text: "Ok",
+                        click: function() {
+                            location.href = 'cl/add/0'
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ]
+            });
+            $( "#popup" ).click(function( event ) {
+                $( "#dialog" ).dialog( "open" );
+                event.preventDefault();
+            });
+    // ===============================================================================
+            
+        });        
+        </script>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 justify-content-between">
+            <nav class="navbar navbar-light bg-light ">  
+                <div class="col-md-3 navbar-brand">Welcome {{ user.first_name }}!</div>
+                <div class="col-md-3.5 align-content-end">     
+                    <!-- <a class="nav-item btn btn-light" href="#" id="popup">Popup</a>          <============= Triggers Popup -->
+                    <a class="nav-item btn btn-light" href="cl/add/0">Add Book and Review</a>
+                    <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a>
+                </div>
+            </nav>
+        </div>        
+    </div>
+    <div id="dialog" title="Basic dialog">
+        <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the &apos;x&apos; icon.</p>
+    </div>
+    <div class="container">        
+        <div class="row justify-content-around">
+            <div class="col-md-6">
+                <h4>Recent Book Reviews:</h4>
+                <ul class="list-group list-group-flush">
+                    {% for review in reviews %}
+                        <li class="list-group-item">
+                            <span><a href="cl/info/{{review.book.id}}">{{review.book.title}}</a></span><br>
+                            <span>Rating: </span>
+                            {% with ''|center:review.rating as range %}
+                                {% for _ in range %}
+                                    <span class="fa fa-star checked" style="color:gold;"></span>
+                                {% endfor %}
+                            {% endwith %}
+                            <br>
+                            <a href="/cl/users/{{review.user.id}}">{{ review.user.full_name }}: &nbsp</a>
+                            <span>{{ review.review }}</span><br>
+                            <span>Posted on {{ review.created_at|date:"F jS Y" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4>Other Books:</h4>
+                <!-- <iframe name="bookList" id="bookList" cols="50" rows="10"> -->
+                <div class="embed-responsive align-items-start overflow-x:hidden" rows="4" style="max-height: 480px; overflow-y: auto;">
+                    <ul class="list-group list-group-flush ">
+                        {% for book in books %}                        
+                            <li class="list-group-item"><a href="cl/info/{{book.id}}">{{ book.title }}</a></li>
+                        {% endfor %}
+                    </ul>        
+                </div>            
+                <!-- </iframe> -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

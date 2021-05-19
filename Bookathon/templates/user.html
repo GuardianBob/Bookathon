@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap 4.6 CSS, JQuery, AJAX all-in-one -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
+    <title>{{ user.full_name }}</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 justify-content-between">
+            <nav class="navbar navbar-light bg-light ">  
+                <div class="col-md-3 navbar-brand"></div>
+                <div class="col-md-3.5 align-content-end"> 
+                    <a class="nav-item btn btn-light" href="/cl/books/0">Home</a>
+                    <a class="nav-item btn btn-light" href="/cl/add/0">Add Book and Review</a>
+                    <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a>
+                </div>
+            </nav>
+        </div>        
+    </div>
+    <div class="container"> 
+        <div class="row justify-content-left ">
+            <div class="col-md-5 mt-4">
+                <h5>User Name: {{ user.full_name }}</h5>
+                <p><b>Email:</b> {{ user.email }}</p>
+                <p><b>Total Reviews:</b> {{ reviews|length }}</p>
+                <ul style="max-height: 400px; overflow-y: auto; overflow-x:hidden;" class="list-group list-group-flush">
+                    <p><b>Posted reviews on the following books:</b></p>
+                    <div class="ml-2">
+                        {% for review in reviews %}
+                            <li class="list-group-item">
+                                <a href="/cl/info/{{review.book.id}}">{{review.book.title}}</a>                                
+                            </li>
+                        {% endfor %}
+                    </div>
+                </ul>
+            </div>                      
+        </div>
+    </div>
+</body>
+</html>

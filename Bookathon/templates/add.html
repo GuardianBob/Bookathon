@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap 4.6 CSS, JQuery, AJAX all-in-one -->
+    <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <title>Add Book</title>    
+    
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12 justify-content-between">
+            <nav class="navbar navbar-light bg-light "> 
+                <div class="col-md-3 navbar-brand">Add New Book</div>
+                <div class="col-md-3.5 align-content-end">                        
+                    <a class="nav-item btn btn-light" href="{% url 'home' %}">Home</a>
+                    <!-- <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a> -->
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="container">        
+        <div class="row">
+            <p><h5>Add a New Book Title and Review</h5></p>
+        </div>
+        <div class="row">
+            <div class="col-md-5 form-group ">                        
+                <form action="new_book" method="post" id="new_book">
+                    {% csrf_token %}
+                    
+                    {{ form }}
+                </form>
+                <input type="submit" value="Add Book and Review" form="new_book" class="btn btn-outline-primary px-5 my-2 " id="submit">
+            </div>
+        </div>
+    </div>
+</body>
+<footer>
+</footer>
+</html>
