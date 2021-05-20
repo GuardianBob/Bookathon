@@ -14,7 +14,8 @@ import os
 from dotenv import load_dotenv  # Required for environment variables like SECRET_KEY, API keys, etc.
 # Must be called at the beginning
 load_dotenv()
-
+# Add google books API key to .env file first: BOOKS_API = <api key> 
+BOOKS_API = os.getenv('BOOKS_API')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
