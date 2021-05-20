@@ -45,7 +45,7 @@
                                 {% endfor %}
                             {% endwith %}
                             <br>
-                            <a href="/cl/users/{{user.id}}">{{ review.user.full_name }}: </a>
+                            <a href="/cl/users/{{user.id}}">{{ review.user.username }}: </a>
                             <span>{{ review.review }}</span><br>
                             <span>Posted on {{ review.created_at|date:"F jS Y" }}</span><br>
                             {% if user.id == review.user.id %}
@@ -56,7 +56,7 @@
                 </ul>
             </div>
             <div class="col-md-4 mt-4 form-group">
-                <form action="{% url 'update_submit' book.id %}" method="post" class="form-group" name="update_submit">
+                <form action="{% url 'submit_update' book.id %}" method="post" class="form-group" name="update_submit">
                     {% csrf_token %}
                     <!-- <label for="review" class="" >Review: </label><span id="del_msg" class="errmsg ml-2">{{ errors.review }}</span>
                     <textarea name="review" id="review" rows="5" class="form-control w-75"></textarea>
