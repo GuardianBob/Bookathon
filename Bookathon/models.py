@@ -1,8 +1,8 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 from django.db import models
-from loginApp.models import User
+# from loginApp.models import User
 
 RATING_CHOICES = (
     ('1', 1), 
@@ -80,3 +80,11 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = CheckReview()
+
+class Genre(models.Model):
+    name = models.TextField()
+    books = models.ManyToManyField(Book, related_name="genres_book", blank=True)
+    author = models.ManyToManyField(Author, related_name="genres_author", blank=True)
+    user = models.ManyToManyField(Book, related_name="genres_user", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

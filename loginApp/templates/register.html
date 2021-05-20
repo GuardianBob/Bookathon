@@ -10,15 +10,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <script src="{% static 'js/nav.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <script src="{% static 'js/nav.js' %}"></script> -->
+    <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}">
     <title>User Registration and Login</title>
     <script type="text/javascript">
         function checkPass() {
-            var reg_pass = $("#password").val();
-            var checkPass = $("#check_pass").val();            
-            if ($("#check_pass").val() == $("#password").val()) {
+            var reg_pass = $("#id_password1").val();
+            var checkPass = $("#id_password2").val();            
+            if ($("#id_password2").val() == $("#id_password1").val()) {
                 $("#c_pass").html("");
                 $("#submit").attr("disabled", false);
             } else {
@@ -28,7 +28,7 @@
         }        
 
         function showPass() {
-            var password = document.getElementById("password");
+            var password = document.getElementById("id_password1");
             if (password.type === "password") {
                 password.type = "text";
             } else {
@@ -39,21 +39,17 @@
         $(document).ready(function () {
             //$('#navigation').load('navi.html');
             $("submit").attr("disabled", true)   
-            $("#check_pass").keyup(checkPass);
+            $("#id_password2").keyup(checkPass);
         });
     </script>
 </head>
 <body>
-    <div class="navigation">
-        {% block navbar %}
-        {% include 'nav_demo.html' %}
-        {% endblock navbar%}
-    </div>
     <div class="container">
         <div class="row mx-5">
             <div class="col-md-4">
-                <h3>Registration</h3>                                    
-                <form action="user_register" method="post">
+                <h3>Registration</h3>          
+                <p>Already have an account? <a href="{% url 'login' %}">Log in.</a></p>                          
+                <form action="{% url 'validate_register' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ register_form }}
