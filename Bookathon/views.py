@@ -63,7 +63,7 @@ def book_info(request, bid, form=ReviewForm()):
         "author": author,
         "user": User.objects.get(id=user_id),
     } 
-    print(context['form'])
+    # print(context['form'])
     return render(request, "info.html", context)
 
 def user_info(request, uid):
@@ -88,7 +88,7 @@ def update(request, bid):
         user = User.objects.get(id=request.session['user_id'])
         book = Book.objects.get(id=bid)
         review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=book, user=user)
-    return redirect(f'/info/{bid}')
+    return redirect(f'/books/{bid}')
 
 def clear(request, page, bid=None):
     if 'errors' in request.session:
@@ -109,7 +109,7 @@ def newBook(request):
     if not form.is_valid():
         context = { 'form': form, }
         return render(request, 'add.html', context)    
-    print(request.POST)     
+    # print(request.POST)     
     if not 'author_sel' in request.POST or request.POST['author_sel'] == '':        
         author_obj = checkAuthor(request.POST['author'])
     else:
@@ -133,7 +133,7 @@ def checkAuthor(authName):
     fName = authName.split(" ", 1)[0]
     lName = authName.split(" ", 1)[1]
     author_obj = Author.objects.filter(first_name__contains=fName).filter(last_name__contains=lName)
-    print(len(author_obj))
+    # print(len(author_obj))
     if len(author_obj) > 0:
         return author_obj
     else:

@@ -32,7 +32,7 @@
         </div>
         <div class="row">
             <div class="col-md-5 form-group ">                        
-                <form action="new_book" method="post" id="new_book">
+                <form action="{% url 'submit_new_book' %}" method="post" id="new_book">
                     {% csrf_token %}
                     
                     {{ form }}

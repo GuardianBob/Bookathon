@@ -18,10 +18,10 @@ RATING_CHOICES = (
 
 # Get author list dynamically each time:
 def get_authors():
-    authors = Author.objects.all().values_list('id', 'full_name')
-    author_list = (("", ""),)
+    authors = Author.objects.all().values_list('id', 'first_name', 'last_name')
+    author_list = [("", ""),]
     for author in authors:
-        author_list.append((f'{author[0]}', f'{author[1]}',))
+        author_list.append((f'{author[0]}', f'{author[1]} {author[2]}',))
     return author_list
 
 class Date_In(TextInput):
