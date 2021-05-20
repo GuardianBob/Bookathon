@@ -18,13 +18,15 @@
             if (login_password.length >= 8) {
                 $("#login").attr("disabled", false)
             } else {                 
-                $("#login").attr("disabled", true)
+                //$("#login").attr("disabled", true)
             }
         }        
 
         $(document).ready(function () {   
             $("login").attr("disabled", true)
-            $("#login_password").keyup(passEnbl);            
+            $("#login_password").keyup(passEnbl);         
+            $('#id_username, #id_password').attr('class', 'form-control');
+            $('#login').attr('class', 'btn btn-outline-primary px-2 my-2');
         });
     </script>
 </head>
@@ -33,14 +35,14 @@
         
         <div class="col-md-4">
             <h3>Login</h3>                                    
-            <form action="user_validate" method="post">
+            <form action="{% url 'validate_login' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">        
                     {{ login_form }}
-                    <input type="submit" value="Login" class="px-2 my-2" id="login" disabled>
+                    <input type="submit" value="Login" class="px-2 my-2" id="login" >
                 </div>
             </form>
-            <p><a href="register">Don't have an account? Register</a></p>
+            <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
         </div>
     </div>
 </body>

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Book, Author, Review
+# from loginApp.models import User, Address
+from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.core import serializers
 from .forms import BookForm, ReviewForm
@@ -11,14 +13,16 @@ from datetime import datetime, date
 # NOTE: This is the original logged-in validation I used:
 def validate_user_logged_in(request):
     if not 'user_id' in request.session:
-        return redirect('/')    
+        return False   
     else:
         user_id = request.session['user_id']
-        return True
+        return user_id
 
 
 def books(request):   
-    return redirect('/') if not validate_user_logged_in() is True else None
+    user_id = validate_user_logged_in(request)
+    if user_id is False: 
+        return redirect('/login') 
     reviews = Review.objects.order_by('-created_at')[:3]
     context = {
         'reviews': reviews,
@@ -28,7 +32,9 @@ def books(request):
     return render(request, 'books.html', context)
 
 def add(request):
-    return redirect('/') if not validate_user_logged_in() is True else None
+    user_id = validate_user_logged_in(request)
+    if user_id is False: 
+        return redirect('/login') 
     new_form = BookForm()
     context = {
         "form": new_form,
@@ -42,7 +48,9 @@ def add(request):
     return render(request, "add.html", context)
 
 def book_info(request, bid, form=ReviewForm()):    
-    return redirect('/') if not validate_user_logged_in() is True else None
+    user_id = validate_user_logged_in(request)
+    if user_id is False: 
+        return redirect('/login') 
     user_id = request.session['user_id']
     book = Book.objects.get(id=bid)
     author = Author.objects.get(books__id=bid)
