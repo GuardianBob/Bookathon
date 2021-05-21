@@ -22,6 +22,7 @@ def get_books_data(query):
             'authors': authors,
             'posterImg': item['volumeInfo']['imageLinks']['thumbnail'],
             'link': item['selfLink'],
+            # 'rating': item['volumeInfo']['averageRating'],
             }
         )
     return book_list2      

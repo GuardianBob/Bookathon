@@ -176,15 +176,8 @@ def search(request):
 def book_query(request):
     query = request.POST['search'] #request.GET.get('q')
     books = get_books_data(query)
-    # print(books)
-    # for book in books:
-    #     book_data = {
-    #         'title' : ['title'],
-    #         'id' : book['id']
-    #     }
     context = {
-
         'books': books
     }
 
-    return JsonResponse(context)
+    return render(request, 'results.html', context)

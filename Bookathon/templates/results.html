@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <title>TMDB Movie Search</title>
+    <title>Bookathon Search</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <!-- Bootstrap 4.6 CSS, JQuery, AJAX all-in-one -->
@@ -41,8 +41,9 @@
                             <div class="card-body">    
                                 <div class="card-text">
                                     {{ book.title }} <br>
-                                    {{ book.author }} <br>
-                                    {{ book.rating }}
+                                    {% for author in book.authors %}
+                                    {{ author }} <br>
+                                    {% endfor %}
                                 </div>
                             </div>                          
                         </div>                       
