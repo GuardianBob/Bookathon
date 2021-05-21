@@ -10,6 +10,7 @@ import bcrypt
 from django.utils import timezone
 from datetime import datetime, date
 from django.conf import settings
+from .search import get_books_data
 
 # NOTE: This is the original logged-in validation I used:
 def get_user_id(request):
@@ -171,3 +172,12 @@ def test(request):
 
 def search(request):   
     return render(request, 'search.html')
+
+def book_query(request):
+    query = request.POST['search'] #request.GET.get('q')
+    books = get_books_data(query)
+    context = {
+        'books': books
+    }
+
+    return render(request, 'results.html', context)
