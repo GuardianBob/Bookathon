@@ -19,8 +19,8 @@
             <nav class="navbar navbar-light bg-light "> 
                 <div class="col-md-3 navbar-brand">{{ book.title }}</div>
                 <div class="col-md-3.5 align-content-end">                        
-                    <a class="nav-item btn btn-light" href="/books">Home</a>
-                    <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a>
+                    <a class="nav-item btn btn-light" href="{% url 'home' %}">Home</a>
+                    <a class="nav-item btn btn-light ml-3" href="{% url 'logout' %}">Logout</a>
                 </div>
             </nav>
         </div>
@@ -45,7 +45,7 @@
                                 {% endfor %}
                             {% endwith %}
                             <br>
-                            <a href="/cl/users/{{user.id}}">{{ review.user.username }}: </a>
+                            <a href="/cl/users/{{review.user.id}}">{{ review.user.username }}: </a>
                             <span>{{ review.review }}</span><br>
                             <span>Posted on {{ review.created_at|date:"F jS Y" }}</span><br>
                             {% if user.id == review.user.id %}
@@ -58,15 +58,6 @@
             <div class="col-md-4 mt-4 form-group">
                 <form action="{% url 'submit_update' book.id %}" method="post" class="form-group" name="update_submit">
                     {% csrf_token %}
-                    <!-- <label for="review" class="" >Review: </label><span id="del_msg" class="errmsg ml-2">{{ errors.review }}</span>
-                    <textarea name="review" id="review" rows="5" class="form-control w-75"></textarea>
-                    <label for="rating" class="mt-3" >Rating: </label><span id="del_msg" class="errmsg ml-2">{{ errors.rating }}</span><br>
-                    <select name="rating" id="rating" class="btn btn-outline-secondary dropdown-toggle form-control w-25">
-                        <option value=""></option>
-                        {% for i in rateScale %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
-                    </select> -->
                     {{ form }}
                     <input type="hidden" name="book_id" value="{{book.id}}">
                     <input type="submit" value="Add" class="btn btn-outline-primary px-5 my-2 " id="submit">
