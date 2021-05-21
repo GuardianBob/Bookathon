@@ -15,4 +15,7 @@ urlpatterns = [
     path('users/<int:uid>', views.user_info, name="user_profile"),
     path('books/delete/<int:rid>', views.del_review, name="delete_review"),
     path('cl/<str:page>/<int:bid>', views.clear, name="clear_errors"),
+    # **********************************************************************
+    path('books/test', views.test, name="test"),
+    path('books/search', views.search, name="search"),
 ]
