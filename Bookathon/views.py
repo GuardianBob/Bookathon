@@ -140,4 +140,9 @@ def checkAuthor(authName):
         new_author = Author.objects.create(first_name=fName, last_name=lName)
         return new_author
 
+# ****************************************************************************
+def test(request):   
+    return render(request, 'test.html')
 
+def search(request):   
+    return render(request, 'search.html')
