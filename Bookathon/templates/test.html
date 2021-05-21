@@ -4,6 +4,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>Google Books Embedded Viewer API Example</title>
+    {% load static %}
     <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
     <script type="text/javascript">
       google.books.load();
@@ -17,6 +18,12 @@
     </script>
   </head>
   <body>
+    <form action="test_search" method="post">
+      {% csrf_token %}
+      <input type="text" name="search" id="search">
+      <button type="submit" name="submit">Search</button>
+    </form>
+    <h4><a href="{% url 'test_search' %}">Test Search</a></h4>
     <div id="viewerCanvas" style="width: 900px; height: 700px"></div>
   </body>
 </html>
