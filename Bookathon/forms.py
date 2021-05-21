@@ -31,7 +31,7 @@ class BookForm(forms.Form):
     title = forms.CharField(max_length=200, widget=forms.TextInput)  
     author = forms.CharField(max_length=200, widget=forms.TextInput, required=False)
     # Dropdown field
-    author_sel = forms.ChoiceField(widget=forms.Select, choices=get_authors, required=False) 
+    author_sel = forms.ChoiceField(widget=forms.Select, choices=get_authors, required=False)  #choices calls a query each time it is created.
     review = forms.CharField(widget=forms.Textarea, required=False)
     rating = forms.ChoiceField(widget=forms.Select, choices=RATING_CHOICES, required=False)
 

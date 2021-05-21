@@ -53,18 +53,16 @@
     <div class="row">
         <div class="col-md-12 justify-content-between">
             <nav class="navbar navbar-light bg-light ">  
-                <div class="col-md-3 navbar-brand">Welcome {{ user.first_name }}!</div>
+                <div class="col-md-3 navbar-brand">Welcome {{ user.username }}!</div>
                 <div class="col-md-3.5 align-content-end">     
                     <!-- <a class="nav-item btn btn-light" href="#" id="popup">Popup</a>          <============= Triggers Popup -->
-                    <a class="nav-item btn btn-light" href="cl/add/0">Add Book and Review</a>
-                    <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a>
+                    <a class="nav-item btn btn-light" href="{% url 'add_book_page' %}">Add Book and Review</a>
+                    <a class="nav-item btn btn-light ml-3" href="{% url 'logout' %}">Logout</a>
                 </div>
             </nav>
         </div>        
     </div>
-    <div id="dialog" title="Basic dialog">
-        <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the &apos;x&apos; icon.</p>
-    </div>
+    
     <div class="container">        
         <div class="row justify-content-around">
             <div class="col-md-6">
@@ -80,7 +78,7 @@
                                 {% endfor %}
                             {% endwith %}
                             <br>
-                            <a href="/cl/users/{{review.user.id}}">{{ review.user.full_name }}: &nbsp</a>
+                            <a href="/cl/users/{{review.user.id}}">{{ review.user.username }}: &nbsp</a>
                             <span>{{ review.review }}</span><br>
                             <span>Posted on {{ review.created_at|date:"F jS Y" }}</span>
                         </li>
@@ -89,15 +87,13 @@
             </div>
             <div class="col-md-4">
                 <h4>Other Books:</h4>
-                <!-- <iframe name="bookList" id="bookList" cols="50" rows="10"> -->
                 <div class="embed-responsive align-items-start overflow-x:hidden" rows="4" style="max-height: 480px; overflow-y: auto;">
                     <ul class="list-group list-group-flush ">
                         {% for book in books %}                        
                             <li class="list-group-item"><a href="cl/info/{{book.id}}">{{ book.title }}</a></li>
                         {% endfor %}
                     </ul>        
-                </div>            
-                <!-- </iframe> -->
+                </div>         
             </div>
         </div>
     </div>

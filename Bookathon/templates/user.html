@@ -17,9 +17,9 @@
             <nav class="navbar navbar-light bg-light ">  
                 <div class="col-md-3 navbar-brand"></div>
                 <div class="col-md-3.5 align-content-end"> 
-                    <a class="nav-item btn btn-light" href="/cl/books/0">Home</a>
-                    <a class="nav-item btn btn-light" href="/cl/add/0">Add Book and Review</a>
-                    <a class="nav-item btn btn-light ml-3" href="/logout">Logout</a>
+                    <a class="nav-item btn btn-light" href="{% url 'home' %}">Home</a>
+                    <a class="nav-item btn btn-light" href="{% url 'add_book_page' %}">Add Book and Review</a>
+                    <a class="nav-item btn btn-light ml-3" href="{% url 'logout' %}">Logout</a>
                 </div>
             </nav>
         </div>        
@@ -27,7 +27,7 @@
     <div class="container"> 
         <div class="row justify-content-left ">
             <div class="col-md-5 mt-4">
-                <h5>User Name: {{ user.full_name }}</h5>
+                <h5>User Name: {{ user.username }}</h5>
                 <p><b>Email:</b> {{ user.email }}</p>
                 <p><b>Total Reviews:</b> {{ reviews|length }}</p>
                 <ul style="max-height: 400px; overflow-y: auto; overflow-x:hidden;" class="list-group list-group-flush">

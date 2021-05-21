@@ -6,13 +6,13 @@ from django.contrib.auth import logout
 import bcrypt
 from .forms import Register_Form, Login_Form
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.template.loader import get_template
 from django.template import Context
 
 def index(request):
     # This is intended for a welcome splash page
+    # Currently this redirects to the books homepage if a user is logged in or the login page if they are not
     return redirect('/books')
 
 def login(request, login_form=Login_Form()):
@@ -34,7 +34,7 @@ def validate_register(request):
     check_form = Register_Form(request.POST)    
     if not check_form.is_valid():
         print('registration failed!')
-        print(check_form)
+        # print(check_form)
         login_form = Login_Form()
         context = { 
             'register_form': check_form,
@@ -45,36 +45,23 @@ def validate_register(request):
         return render(request, page, context)
     else:
         print('registration successful!')
-        # passwd = request.POST['password']
-        # uPass = bcrypt.hashpw(passwd.encode(), bcrypt.gensalt()).decode()
-        # level = False
-        # if len(User.objects.all()) == 0:
-            # level = True
         password = check_form.cleaned_data['password1']   
+        # NOTE Django's User model uses it's own hash system for passwords on the backend so we don't need to implement bcrypt here
         user = User.objects.create_user(first_name=request.POST['first_name'], last_name=request.POST['last_name'], email=request.POST['email'], password=password, username=request.POST['username'])
         request.session['user_id'] = user.id
-
+        request.user = user
         return redirect('/')
-
-def add_new_user(request):
-    validate_register(request)
-    return redirect('/manage_users')
     
-def new_registration(request):
-    if validate_register(request) == True:
-        if not 'user_id' in request.session:  
-            user = User.objects.get(email=request.POST['email'])      
-            request.session["user_id"] = user.id
-    return redirect('/')
-
 def validate_login(request):
     if request.method != "POST":
         return redirect("login")
     # check_form = Login_Form(request.POST)
-    print(request.POST)
+    # print(request.POST)
+    # NOTE: this is Django's backend authorization function.
+    # currently it only works with usernames.
     user = authenticate(request, username = request.POST['username'], password = request.POST['password'])
     # if not check_form.is_valid():
-    print(user)
+    # print(user)
     if user is None:
         print('failed!')
         register_form = Register_Form()
@@ -85,6 +72,7 @@ def validate_login(request):
     else:
         # user = User.objects.get(email=request.POST['login_email'])
         request.session["user_id"] = user.id
+        request.user = user
         return redirect('/')
 
 def logout_view(request):

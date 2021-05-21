@@ -9,51 +9,64 @@ from django.contrib import messages
 import bcrypt
 from django.utils import timezone
 from datetime import datetime, date
+from django.conf import settings
 
 # NOTE: This is the original logged-in validation I used:
-def validate_user_logged_in(request):
+def get_user_id(request):
     if not 'user_id' in request.session:
-        return False   
+        return None   
     else:
         user_id = request.session['user_id']
         return user_id
 
+# Authentication keeps returning AnonymousUser when user is signed in
+# This updates it to fix the problem
+def validate_user(request):
+    if request.user.is_authenticated is False:  # Initially this always returns false. 
+    # request.user needs to be set here initially for some reason.  Once it is set, request.user 
+    # will always be the logged in user and this will return True.
+        user_id = get_user_id(request)
+        # print(user_id)
+        if not user_id is None:
+            request.user = User.objects.get(id=user_id) # set request.user to logged in user
+            return True
+        else:
+            return False
+    else:
+        return True
 
-def books(request):   
-    user_id = validate_user_logged_in(request)
-    if user_id is False: 
+# called as the index/home page
+def books(request):
+    if validate_user(request) is False:  # Used to validate the user is logged in and set some request variables
         return redirect('/login') 
-    reviews = Review.objects.order_by('-created_at')[:3]
+    # print('books_user: ', request.user)
+    reviews = Review.objects.order_by('-created_at')[:3] # gets the 3 most recent reviews
     context = {
         'reviews': reviews,
-        "user": User.objects.get(id=user_id),
+        "user": request.user,
         'books': Book.objects.order_by('title')
     }
-    return render(request, 'books.html', context)
+    return render(request, 'books.html', context)  
 
-def add(request):
-    user_id = validate_user_logged_in(request)
-    if user_id is False: 
-        return redirect('/login') 
-    new_form = BookForm()
+# called when someone is adding a book
+def add(request):  
+    if validate_user(request) is False:
+        return redirect('/login')
     context = {
-        "form": new_form,
+        "form": BookForm(), # BookForm is imported from forms.py
         "books": Book.objects.all(),
         "authors": Author.objects.all(),
-        "user": User.objects.get(id=user_id),
-        "rateScale": range(1, 6),        
+        "user": request.user,
+        "rateScale": range(1, 6),  
     }
-    # if 'errors' in request.session:
-    #     context['errors'] = request.session['errors']
     return render(request, "add.html", context)
 
-def book_info(request, bid, form=ReviewForm()):    
-    user_id = validate_user_logged_in(request)
-    if user_id is False: 
-        return redirect('/login') 
-    user_id = request.session['user_id']
-    book = Book.objects.get(id=bid)
-    author = Author.objects.get(books__id=bid)
+# called when someone clicks on a book title
+def book_info(request, book_id, form=ReviewForm()): 
+    if validate_user(request) is False:
+        return redirect('/login')    
+    book = Book.objects.get(id=book_id)
+    author = Author.objects.get(books__id=book_id)
     reviews = Review.objects.filter(book=book)
     new_form = form
     context = {
@@ -61,50 +74,59 @@ def book_info(request, bid, form=ReviewForm()):
         "book": book,
         "reviews": reviews,
         "author": author,
-        "user": User.objects.get(id=user_id),
+        "user": request.user,
     } 
     # print(context['form'])
     return render(request, "info.html", context)
 
-def user_info(request, uid):
-    user = User.objects.get(id=uid)
-    reviews = Review.objects.filter(user=user)
+# called when someone clicks on a username
+def user_info(request, profile_id): 
+    if validate_user(request) is False:
+        return redirect('/login')
+    profile = User.objects.get(id=profile_id)
+    reviews = Review.objects.filter(user=profile)
     context = {
-        'user': user,
+        'user': profile,
         'reviews': reviews,
     }
     return render(request, "user.html", context)
 
-def update(request, bid):
+# called when someone posts a review for a book already in database
+def update(request, book_id):
+    if validate_user(request) is False:
+        return redirect('/login')
     if not request.method == "POST":
         return redirect('/')
     form = ReviewForm(request.POST)
     if not form.is_valid():
         print('failed')    
-        return book_info(request, bid, form) 
+        return book_info(request, book_id, form) 
     # NOTE This passes the form data back to the info page and eliminates about 8-10 lines of code.
     # NOTE NOTE  This only works if "books" is removed from the update url otherwise it doubles "update" in the url
     else:
-        user = User.objects.get(id=request.session['user_id'])
-        book = Book.objects.get(id=bid)
-        review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=book, user=user)
-    return redirect(f'/books/{bid}')
+        book = Book.objects.get(id=book_id)
+        review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=book, user=request.user)
+    return redirect(f'/books/{book_id}')
 
-def clear(request, page, bid=None):
+# This was a workaround to clear form errors.  I don't believe it is necessary anymore
+def clear(request, page, book_id=None):
     if 'errors' in request.session:
         del request.session['errors']
     if page == 'info':
-        return redirect(f'/books/{bid}')
+        return redirect(f'/books/{book_id}')
     if page == 'new' or page == 'books':
         return redirect('/books')
     if page == 'add':
         return redirect('/books/add')
     if page == 'users':
-        return redirect(f'/users/{bid}')
+        return redirect(f'/users/{book_id}')
 
+# called when someone is adding a new book
 def newBook(request):
     if not request.method == "POST":
         return redirect('/')
+    if validate_user(request) is False:
+        return redirect('/login')
     form = BookForm(request.POST)
     if not form.is_valid():
         context = { 'form': form, }
@@ -115,20 +137,23 @@ def newBook(request):
     else:
         # print("author = " + request.POST['author_sel'])
         author_obj = Author.objects.get(id=request.POST['author_sel'])
-    user = User.objects.get(id=request.session['user_id'])
-    new_book = Book.objects.create(title=request.POST['title'], uploaded_by=user)
+    new_book = Book.objects.create(title=request.POST['title'], uploaded_by=request.user)
     author_obj.books.add(new_book)
     if request.POST['review'] != '':
-        new_review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=new_book, user=user)  
+        new_review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=new_book, user=request.user)  
     return redirect(f'/books/{new_book.id}')
 
-def del_review(request, rid):
-    review = Review.objects.get(id=rid)
-    bid = review.book.id
-    if request.session['user_id'] == review.user.id:
+# called when a user wants to delete their own review
+def del_review(request, review_id):
+    if validate_user(request) is False:
+        return redirect('/login')
+    review = Review.objects.get(id=review_id)
+    book_id = review.book.id
+    if request.user.id == review.user.id:
         review.delete()
-    return redirect(f'/books/{bid}')
+    return redirect(f'/books/{book_id}')
     
+# used to verify that an author is not already in teh database before adding a book.
 def checkAuthor(authName):
     fName = authName.split(" ", 1)[0]
     lName = authName.split(" ", 1)[1]
