@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-image: url("../img/lib_img_1.jpg");
+    /* background-color: aliceblue; to use if background img removed */
+    height: 100%;
+    /* Center/scale the image */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.center{
+    margin: auto;
+    margin-top: 500px;
+}
+
+#header{
+    font-family: 'Righteous', sans-serif;
+    font-size: 3rem;
+    /* color: aliceblue; (to use if .center is pushed up  */
+    margin-left: 40px;
+}
+
+#input{
+    width: 60%;
+}
+
+h2{
+    font-family: 'Righteous', sans-serif;
+}
+
+.book-list{
+    margin-top: 50px;
+    visibility: hidden;
+}
