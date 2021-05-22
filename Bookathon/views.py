@@ -12,6 +12,8 @@ from datetime import datetime, date
 from django.conf import settings
 from .search import get_books_data, parse_book_info
 
+book_api = settings.BOOKS_API
+
 # NOTE: This is the original logged-in validation I used:
 def get_user_id(request):
     if not 'user_id' in request.session:
@@ -170,8 +172,9 @@ def checkAuthor(authName):
 def test(request):   
     return render(request, 'test.html')
 
-def search(request):   
-    return render(request, 'search.html')
+# COMMENTING OUT FOR NOW..... SO IT DOESN'T CLUSH WITH THE ONE BELOW. WILL TURN IT BACK ON ONCE THE BOOTTON IS DELETED
+# def search(request):   
+#     return render(request, 'search.html')
 
 def book_query(request):
     query = request.POST['search'] #request.GET.get('q')
@@ -182,6 +185,7 @@ def book_query(request):
 
     return render(request, 'results.html', context)
 
+
 def get_book_info(request, id):
     print(id)
     url = "https://books.googleapis.com/books/v1/volumes/" + id
@@ -191,3 +195,10 @@ def get_book_info(request, id):
         'book' : book_info
     }
     return None
+
+def search(request):  
+    context = {
+        "book_api": book_api,
+    }
+    return render(request, 'search.html', context)
+
