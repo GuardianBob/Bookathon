@@ -46,6 +46,7 @@ $(document).ready(function(){
     function displayResults(responce){
         for (var i=0; i< responce.items.length; i+=2){
             item = responce.items[i];
+            id1 = item.id;
             title1 = item.volumeInfo.title;
             author1 = item.volumeInfo.authors;
             publisher1 = item.volumeInfo.publisher;
@@ -54,6 +55,7 @@ $(document).ready(function(){
             bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHolder;
             
             item2 = responce.items[i+1];
+            id2 = item.id;
             title2 = item2.volumeInfo.title;
             author2 = item2.volumeInfo.authors;
             publisher2 = item2.volumeInfo.publisher;
@@ -63,15 +65,15 @@ $(document).ready(function(){
 
             // in production code, item.text should have the HTML entities escaped.
             outputList.innerHTML += '<div class="row mt-4">' +
-                                    formatOutput(bookImg1, title1, author1, publisher1, bookLink1, bookIsbn) +
-                                    formatOutput(bookImg2, title2, author2, publisher2, bookLink2, bookIsbn2) +
+                                    formatOutput(bookImg1, title1, author1, publisher1, bookLink1, bookIsbn, id1) +
+                                    formatOutput(bookImg2, title2, author2, publisher2, bookLink2, bookIsbn2, id2) +
                                     '</div>';
 
             console.log(outputList);
         }
     }
     // template for boostrap cards
-    function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn){
+    function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn, bookId){
         var viewUrl = 'test.html?isbn=' + bookIsbn;
         var htmlCard = 
         `<div class="col-lg-6">
@@ -82,10 +84,12 @@ $(document).ready(function(){
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
+                    <span id="book_id" hidden>${bookId}</span>
                     <h5 class="card-title">${title}</h5>
                     <p class="card-text">Author: ${author}</p>
                     <p class="card-text">Publisher: ${publisher}</p>
                     <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
+                    <button class="btn btn-outline-primary" onClick="add_from_search('${bookId}')">Add To Collection</button>
                     </div>
                 </div>
                 </div>
@@ -98,3 +102,16 @@ $(document).ready(function(){
         alert("search term can not be empty!")
     }
 })
+
+function add_from_search(bookId) { 
+    $.ajax({
+        url: "/books/add/" + bookId + "",
+        success: function (response){   
+            return response
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
+};
