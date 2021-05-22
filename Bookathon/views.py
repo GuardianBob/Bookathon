@@ -186,7 +186,7 @@ def book_query(request):
     return render(request, 'results.html', context)
 
 
-def get_book_info(request, id):
+def get_book_info(request, book_id):
     print(id)
     url = "https://books.googleapis.com/books/v1/volumes/" + id
     book_info = parse_book_info(url)
@@ -201,4 +201,8 @@ def search(request):
         "book_api": book_api,
     }
     return render(request, 'search.html', context)
+
+def add_from_search(request, book_id):
+    print(book_id)
+    return HttpResponse(book_id)
 

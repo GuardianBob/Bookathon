@@ -19,5 +19,6 @@ urlpatterns = [
     path('books/test', views.test, name="test"),
     path('books/search', views.search, name="search"),
     path('books/test_search', views.book_query, name="test_search"),
-    path('books/json/<str:id>', views.get_book_info, name="fetch_book"),
+    path('books/json/<str:book_id>', views.get_book_info, name="fetch_book"),
+    path('books/add/<str:book_id>', views.add_from_search, name="add_from_search"),
 ]
