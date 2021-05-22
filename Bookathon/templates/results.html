@@ -14,10 +14,11 @@
     <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
     <script type="text/javascript">
         $(document).ready(function () {
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-            })
+            //$(function () {
+            //    $('[data-toggle="tooltip"]').tooltip();
+            //})
         });
+
     </script>
 </head>
 <body style="background-color: #161B22">
@@ -37,7 +38,7 @@
                 <div class="card-columns text-center">            
                     {% for book in books %}
                         <div class="card text-center text-light bg-dark" style="max-width: 250px; max-height: 500px;">
-                            <a href="{{ book.link }}" target="_blank"><img class="card-img-top" src="{{ book.posterImg }}" alt="{{ book.id }}"></a>
+                            <a href='/books/json/{{ book.id }}' target="_blank"><img class="card-img-top" src="{{ book.posterImg }}" alt="{{ book.id }}"></a>
                             <div class="card-body">    
                                 <div class="card-text">
                                     {{ book.title }} <br>

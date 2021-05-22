@@ -18,5 +18,6 @@ urlpatterns = [
     # **********************************************************************
     path('books/test', views.test, name="test"),
     path('books/search', views.search, name="search"),
-    path('books/test_search', views.book_query, name="test_search")
+    path('books/test_search', views.book_query, name="test_search"),
+    path('books/json/<str:id>', views.get_book_info, name="fetch_book"),
 ]
