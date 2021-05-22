@@ -10,15 +10,9 @@ import bcrypt
 from django.utils import timezone
 from datetime import datetime, date
 from django.conf import settings
-from .search import get_books_data
-# **********************************
-import os
-from dotenv import load_dotenv
-load_dotenv()
-book_api = os.getenv("BOOKS_API")
+from .search import get_books_data, parse_book_info
 
-
-
+book_api = settings.BOOKS_API
 
 # NOTE: This is the original logged-in validation I used:
 def get_user_id(request):
@@ -191,8 +185,20 @@ def book_query(request):
 
     return render(request, 'results.html', context)
 
+
+def get_book_info(request, id):
+    print(id)
+    url = "https://books.googleapis.com/books/v1/volumes/" + id
+    book_info = parse_book_info(url)
+    print(book_info)
+    context = {
+        'book' : book_info
+    }
+    return None
+
 def search(request):  
     context = {
         "book_api": book_api,
     }
     return render(request, 'search.html', context)
+
