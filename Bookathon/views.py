@@ -175,8 +175,11 @@ def checkAuthor(authName):
         return new_author
 
 # ****************************************************************************
-def test(request):   
-    return render(request, 'test.html')
+def book(request):   
+    return render(request, 'book.html')  #testing this one!!!
+
+# def test(request):   
+#     return render(request, 'test.html')
 
 # COMMENTING OUT FOR NOW..... SO IT DOESN'T CLUSH WITH THE ONE BELOW. WILL TURN IT BACK ON ONCE THE BOOTTON IS DELETED
 # def search(request):   
