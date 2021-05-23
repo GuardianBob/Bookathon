@@ -18,8 +18,9 @@ $(document).ready(function(){
         else{
             // display searchData 
             // $.get("https://www.googleapis.com/books/v1/volumes?q="+searchData, getBookData()});
+            console.log(bookUrl + searchData)
             $.ajax({
-                url: bookUrl + searchData,
+                url: bookUrl + searchData,  
                 dataType: "json", 
                 success: function(responce){
                     console.log(responce)
@@ -27,7 +28,8 @@ $(document).ready(function(){
                         alert("no results!.. try again")
                     }
                     else{
-                        $("#title").animate({"margin-top": "5px"}, 1000); //search box animation
+                        // $("#title").animate({"margin-top": "5px"}, 1000); //search box animation
+                        $('#space').animate({"min-height": "50px"}, 1000);
                         $(".book-list").css("visibility", "visible");
                         displayResults(responce)
                     }
@@ -38,6 +40,7 @@ $(document).ready(function(){
             });
         }
         $("#search-box").val(" "); //clearn search box
+        $("#header").attr("class", "text-center mt-5 text-dark");
     });
     
     // function to display search result
@@ -51,7 +54,7 @@ $(document).ready(function(){
             author1 = item.volumeInfo.authors;
             publisher1 = item.volumeInfo.publisher;
             bookLink1 = item.volumeInfo.previewLink;
-            bookIsbn = item.volumeInfo.industryIdentifiers[1].identifier;
+            bookIsbn = item.volumeInfo.industryIdentifiers[0].identifier;
             bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHolder;
             
             item2 = responce.items[i+1];
@@ -60,7 +63,7 @@ $(document).ready(function(){
             author2 = item2.volumeInfo.authors;
             publisher2 = item2.volumeInfo.publisher;
             bookLink2 = item2.volumeInfo.previewLink;
-            bookIsbn2= item2.volumeInfo.industryIdentifiers[1].identifier;
+            bookIsbn2= item2.volumeInfo.industryIdentifiers[0].identifier;
             bookImg2= (item2.volumeInfo.imageLinks) ? item2.volumeInfo.imageLinks.thumbnail :placeHolder;
 
             // in production code, item.text should have the HTML entities escaped.

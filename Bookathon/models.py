@@ -54,9 +54,12 @@ class CheckReview(models.Manager):
 
 class Book(models.Model):
     title = models.CharField(max_length=255)
+    google_id = models.TextField(max_length=255, unique=True) 
     desc = models.TextField(blank=True)
     uploaded_by = models.ForeignKey(User, related_name='books_uploaded', on_delete=models.CASCADE)
-    liked_by = models.ManyToManyField(User, related_name="liked_books", blank=True)
+    liked_by = models.ManyToManyField(User, related_name="favorite_books", blank=True)
+    collection = models.ManyToManyField(User, related_name="collected_books", blank=True, default=0)
+    rating = models.IntegerField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = CheckBook()

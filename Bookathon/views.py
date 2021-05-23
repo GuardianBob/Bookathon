@@ -67,14 +67,16 @@ def add(request):
 # called when someone clicks on a book title
 def book_info(request, book_id, form=ReviewForm()): 
     if validate_user(request) is False:
-        return redirect('/login')    
+        return redirect('/login')
     book = Book.objects.get(id=book_id)
+    book_info = get_book_info(book.google_id)
     author = Author.objects.get(books__id=book_id)
     reviews = Review.objects.filter(book=book)
     new_form = form
     context = {
         "form": new_form,
         "book": book,
+        'book_info': book_info,
         "reviews": reviews,
         "author": author,
         "user": request.user,
@@ -146,6 +148,14 @@ def newBook(request):
         new_review = Review.objects.create(review=request.POST['review'], rating=request.POST['rating'], book=new_book, user=request.user)  
     return redirect(f'/books/{new_book.id}')
 
+def add_book(request, book):
+    if validate_user(request) is False:
+        return redirect('/login')        
+    collected_book = check_book(request, book)
+    collected_book.collection.add(request.user)
+    return 
+
+
 # called when a user wants to delete their own review
 def del_review(request, review_id):
     if validate_user(request) is False:
@@ -158,8 +168,11 @@ def del_review(request, review_id):
     
 # used to verify that an author is not already in teh database before adding a book.
 def checkAuthor(authName):
+    # Use .rsplit() to split starting from the end going backwards.
     fName = authName.split(" ", 1)[0]
-    lName = authName.split(" ", 1)[1]
+    # tmp = authName.split(" ", 1)[1]
+    # middle = tmp.rsplit(" ", 1)[0]
+    lName = authName.rsplit(" ", 1)[1]
     author_obj = Author.objects.filter(first_name__contains=fName).filter(last_name__contains=lName)
     # print(len(author_obj))
     if len(author_obj) > 0:
@@ -167,6 +180,16 @@ def checkAuthor(authName):
     else:
         new_author = Author.objects.create(first_name=fName, last_name=lName)
         return new_author
+
+# Check if book exists in database
+def check_book(request, book):
+    if not len(Book.objects.filter(google_id=book['id'])) > 0:
+        collected_book = Book.objects.create(title=book['title'], google_id=book['id'], rating=book['avg_rating'], uploaded_by=request.user)
+        author = checkAuthor(book['authors'][0])
+        author.books.add(collected_book)
+    else:
+        collected_book = Book.objects.get(google_id=book['id'])
+    return collected_book
 
 # ****************************************************************************
 def test(request):   
@@ -185,24 +208,26 @@ def book_query(request):
 
     return render(request, 'results.html', context)
 
-
-def get_book_info(request, book_id):
-    print(id)
-    url = "https://books.googleapis.com/books/v1/volumes/" + id
+def get_book_info(book_id):
+    # print(book_id)
+    url = f"https://books.googleapis.com/books/v1/volumes/{book_id}"
     book_info = parse_book_info(url)
-    print(book_info)
-    context = {
-        'book' : book_info
-    }
-    return None
+    return book_info
 
-def search(request):  
+def search(request): 
     context = {
         "book_api": book_api,
     }
     return render(request, 'search.html', context)
 
 def add_from_search(request, book_id):
-    print(book_id)
-    return HttpResponse(book_id)
+    # print(book_id)
+    if validate_user(request) is False:
+        return redirect('/login')
+    book_info = get_book_info(book_id)
+    add_book(request, book_info)
+    
+    return HttpResponse('Ok!')
+
+
 
