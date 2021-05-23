@@ -26,14 +26,35 @@
         </div>
     </div>
     <div class="container"> 
-        <div class="row justify-content-left">
-            <div class="col-md-10 mt-4">
+        <div class="row justify-content-around">
+            <div class="col-md-4 mt-4">
                 <h4>{{ book.title }}</h4>
-                <p>Author: &nbsp {{ author.full_name }}</p>            
+                <img src="{{ book_info.posterImg }}" width=300px alt="{{ book.google_id }}">
+                            
+            </div>
+            <div class="col-md-8 mt-4">
+                <br>
+                <p>Author: &nbsp {{ author.full_name }}</p>
+                {% with ''|center:book_info.avg_rating as range %}
+                    {% for _ in range %}
+                        <span class="fa fa-star checked" style="color:gold;"></span>
+                    {% endfor %}
+                {% endwith %}
+                <h5>Description:</h5>
+                <p>{{ book_info.description }}</p>
+                <a href="{{ book_info.google_link }}" target="_blank" rel="noopener noreferrer">View on Google Books</a>
             </div>
         </div>
-        <div class="row justify-content-around ">
-            <div class="col-md-5 mt-4">
+        <div class="row justify-content-around">
+            <div class="col-md-4 mt-4 form-group">
+                <form action="{% url 'submit_update' book.id %}" method="post" class="form-group" name="update_submit">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="hidden" name="book_id" value="{{book.id}}">
+                    <input type="submit" value="Add" class="btn btn-outline-primary px-5 my-2 " id="submit">                    
+                </form>                
+            </div>
+            <div class="col-md-7 ml-1 mt-4 form-group">
                 <h4>Reviews:</h4>
                 <ul style="max-height: 380px; overflow-y: auto; overflow-x:hidden;" class="list-group list-group-flush">
                     {% for review in reviews %}
@@ -54,16 +75,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </div>
-            <div class="col-md-4 mt-4 form-group">
-                <form action="{% url 'submit_update' book.id %}" method="post" class="form-group" name="update_submit">
-                    {% csrf_token %}
-                    {{ form }}
-                    <input type="hidden" name="book_id" value="{{book.id}}">
-                    <input type="submit" value="Add" class="btn btn-outline-primary px-5 my-2 " id="submit">
-                    
-                </form>                
-            </div>            
+            </div>                     
         </div>
     </div>
 </body>

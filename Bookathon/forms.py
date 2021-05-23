@@ -16,6 +16,14 @@ RATING_CHOICES = (
     ('5', 5)
     )
 
+COLLECTION_STATUS = (
+    (0 , 'Plan To Read'),
+    (1 , 'Reading'),
+    (2, 'Already Read'),
+    (3, 'Stopped Reading'),
+    (4, 'On-Hold')
+    )
+
 # Get author list dynamically each time:
 def get_authors():
     authors = Author.objects.all().values_list('id', 'first_name', 'last_name')
@@ -28,10 +36,11 @@ class Date_In(TextInput):
     input_type = 'date'
 
 class BookForm(forms.Form):
-    title = forms.CharField(max_length=200, widget=forms.TextInput)  
-    author = forms.CharField(max_length=200, widget=forms.TextInput, required=False)
+    title = forms.CharField(max_length=200, widget=forms.TextInput)
     # Dropdown field
     author_sel = forms.ChoiceField(widget=forms.Select, choices=get_authors, required=False)  #choices calls a query each time it is created.
+    author = forms.CharField(max_length=200, widget=forms.TextInput, required=False)
+    collected = forms.ChoiceField(widget=forms.Select, choices=COLLECTION_STATUS, required=False) 
     review = forms.CharField(widget=forms.Textarea, required=False)
     rating = forms.ChoiceField(widget=forms.Select, choices=RATING_CHOICES, required=False)
 
@@ -46,7 +55,9 @@ class BookForm(forms.Form):
                 'class': 'form-control',
             })        
         # Update the label of the selection
-        self.fields['author_sel'].label = "Choose an author from the list:"           
+        self.fields['author_sel'].label = "Choose an author from the list:"  
+        self.fields['author'].label = "Or add author here:"  
+        self.fields['collected'].label = "Current Status:"  
         self.fields['review'].widget.attrs.update({ 'rows': '4' })
         self.fields['rating'].widget.attrs.update({ 'class': 'form-control w-25' })
                 

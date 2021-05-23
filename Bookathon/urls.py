@@ -8,6 +8,7 @@ from . import views, login
 
 urlpatterns = [
     path('books', views.books, name="home"),  # Link to the home page
+    path('books/', views.books, name="home"),  # Link to the home page
     path('books/add', views.add, name="add_book_page"), # link to add a new book
     path('books/new_book', views.newBook, name="submit_new_book"), # called from the form after adding a new book to enter the info into the database
     path('update/<int:book_id>', views.update, name="submit_update"), # called from the review form on a book's info page to add the new review
