@@ -6,10 +6,17 @@ $(document).ready(function(){
     var placeHolder = "https://via.placeholder.com/150";
     var searchData;
 
+    document.getElementById("search-box").addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            document.getElementById("search").click();
+            return false;
+        }
+    });
+
     // listener for the search button 
     $("#search").click(function(){
         outputList.innerHTML = " "; //empty html output
-        document.body.style.backgroundImage = "url('')"
+        // document.body.style.backgroundImage = "url('')"
         searchData = $("#search-box").val();
         // handling empty search input field
         if(searchData === " " || searchData === null){
@@ -29,9 +36,12 @@ $(document).ready(function(){
                     }
                     else{
                         // $("#title").animate({"margin-top": "5px"}, 1000); //search box animation
-                        $('#space').animate({"min-height": "50px"}, 1000);
-                        $(".book-list").css("visibility", "visible");
                         displayResults(responce)
+                        // $('#space').animate({"min-height": "50px"}, 1000);
+                        $(".book-list").css("visibility", "visible");
+                        $('html, body').animate({
+                            scrollTop: $("#search-box").offset().top
+                        }, 1000);
                     }
                 },
                 error: function(){
@@ -40,7 +50,7 @@ $(document).ready(function(){
             });
         }
         $("#search-box").val(" "); //clearn search box
-        $("#header").attr("class", "text-center mt-5 text-dark");
+        // $("#header").attr("class", "text-center mt-5 text-dark");
     });
     
     // function to display search result
