@@ -1,53 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Bootstrap 4.6 CSS, JQuery, AJAX all-in-one -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
-    <title>{{book.title}}</title>
+
+{% extends "base.html" %}
+{% load static %}
     
-</head>
-<body>
-    <div class="row">
-        <div class="col-md-12 justify-content-between">
-            <nav class="navbar navbar-light bg-light "> 
-                <div class="col-md-3 navbar-brand">{{ book.title }}</div>
-                <div class="col-md-3.5 align-content-end">                        
-                    <a class="nav-item btn btn-light" href="{% url 'home' %}">Home</a>
-                    <a class="nav-item btn btn-light ml-3" href="{% url 'logout' %}">Logout</a>
-                </div>
-            </nav>
-        </div>
-    </div>
+{% block title %}
+<title>{{book.title}}</title>
+{% endblock %}
+
+{% block main %}    
     <div class="container"> 
-        <div class="row justify-content-around">
-            <div class="col-md-4 mt-4">
+        <div class="row justify-content-lg-around">
+            <div class="col-lg-4 mt-4">
                 <h4>{{ book.title }}</h4>
-                <img src="{{ book_info.posterImg }}" width=300px alt="{{ book.google_id }}">
-                            
+                <img src="{{ book_info.posterImg }}" width=300px alt="{{ book.google_id }}">                            
             </div>
-            <div class="col-md-8 mt-4">
-                <br>
-                <p>Author: &nbsp {{ author.full_name }}</p>
+            <div class="col-sm-8 mt-4">
+                <br>                
+                <span>Author: &nbsp {{ author }}</span><br>                
                 {% with ''|center:book_info.avg_rating as range %}
                     {% for _ in range %}
                         <span class="fa fa-star checked" style="color:gold;"></span>
                     {% endfor %}
-                {% endwith %}
+                {% endwith %} 
+                <span class="ml-2">Total Ratings: {{book_info.total_ratings }} </span><br>
+                {% if not in_collection is True %}
+                    <button class="btn btn-outline-primary" onClick="add_from_search('{{book_info.id}}')">Add To Collection</button>
+                {% endif %}          
                 <h5>Description:</h5>
-                <p>{{ book_info.description }}</p>
+                <p id="description"><span >{{ book_info.description }}</span></p>
                 <a href="{{ book_info.google_link }}" target="_blank" rel="noopener noreferrer">View on Google Books</a>
             </div>
         </div>
         <div class="row justify-content-around">
             <div class="col-md-4 mt-4 form-group">
-                <form action="{% url 'submit_update' book.id %}" method="post" class="form-group" name="update_submit">
+                <form action="{% url 'submit_update' book_info.id %}" method="post" class="form-group" name="update_submit">
                     {% csrf_token %}
                     {{ form }}
                     <input type="hidden" name="book_id" value="{{book.id}}">
@@ -70,7 +55,7 @@
                             <span>{{ review.review }}</span><br>
                             <span>Posted on {{ review.created_at|date:"F jS Y" }}</span><br>
                             {% if user.id == review.user.id %}
-                                <span id="delete"><a href="delete/{{ review.id }}">Remove this Review</a></span>
+                                <span id="delete"><a href="{% url 'delete_review' review.id %}">Remove this Review</a></span>
                             {% endif %}
                         </li>
                     {% endfor %}
@@ -78,5 +63,5 @@
             </div>                     
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
+
