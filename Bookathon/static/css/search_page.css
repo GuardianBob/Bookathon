@@ -3,19 +3,52 @@
     padding: 0;
 }
 
-body{
-    background-image: url("../img/lib_img_1.jpg");
+html {
+    height: 100%;
+}
+
+body {
+    /* background-image: url("../img/lib_img_1.jpg"); */
     /* background-color: aliceblue; to use if background img removed */
     height: 100%;
     /* Center/scale the image */
-    background-position: center;
-    background-repeat: no-repeat;
+    /* background-position: center center; */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    /* background: url("../img/lib_img_1.jpg") no-repeat center center fixed;  */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
 }
 
+.background_img1 {
+    background: url("../img/lib_img_1.jpg") no-repeat center center fixed; 
+}
+
+.background_img2 {
+    background: None;
+}
+
+/* html { 
+    background: url("../img/lib_img_1.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+} */
+
 .center{
     margin: auto;
-    margin-top: 500px;
+    /* margin-top: 30%; */
+}
+
+#space {
+    min-height: 200px;
+}
+
+.container {
+    height: 80%;
 }
 
 #header{
@@ -23,6 +56,7 @@ body{
     font-size: 3rem;
     /* color: aliceblue; (to use if .center is pushed up  */
     margin-left: 40px;
+    height: 70%;
 }
 
 #input{
@@ -34,6 +68,6 @@ h2{
 }
 
 .book-list{
-    margin-top: 50px;
+    /* margin-top: 50px; */
     visibility: hidden;
 }
