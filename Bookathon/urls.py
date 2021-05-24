@@ -8,6 +8,7 @@ from . import views, login
 
 urlpatterns = [
     path('books', views.books, name="home"),  # Link to the home page
+    path('books/', views.books, name="home"),  # Link to the home page
     path('books/add', views.add, name="add_book_page"), # link to add a new book
     path('books/new_book', views.newBook, name="submit_new_book"), # called from the form after adding a new book to enter the info into the database
     path('update/<int:book_id>', views.update, name="submit_update"), # called from the review form on a book's info page to add the new review
@@ -19,5 +20,7 @@ urlpatterns = [
     # path('books/test', views.test, name="test"),
     path('books/book.html', views.book, name="book"),
     path('books/search', views.search, name="search"),
-    path('books/test_search', views.book_query, name="test_search")
+    path('books/test_search', views.book_query, name="test_search"),
+    path('books/json/<str:book_id>', views.get_book_info, name="fetch_book"),
+    path('books/add/<str:book_id>', views.add_from_search, name="add_from_search"),
 ]
