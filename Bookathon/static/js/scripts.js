@@ -13,3 +13,24 @@ function get_book_json(link) {
         }
     });
 };
+
+function add_from_search(bookId) { 
+    $.ajax({
+        url: "/add/" + bookId + "",
+        success: function (response){   
+            $('#add_book').attr('hidden');
+            return response
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
+};
+
+$(document).ready(function(){
+    var descr = $('#description').text();
+    descr.replace(/"/g, '');
+    $('#description').html(descr);
+    // $('#description').html($('#description').html().replace(/['"]+/g, ''));
+});

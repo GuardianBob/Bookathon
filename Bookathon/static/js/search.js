@@ -68,7 +68,7 @@ $(document).ready(function(){
             bookImg1 = (item.volumeInfo.imageLinks) ? item.volumeInfo.imageLinks.thumbnail : placeHolder;
             
             item2 = responce.items[i+1];
-            id2 = item.id;
+            id2 = item2.id;
             title2 = item2.volumeInfo.title;
             author2 = item2.volumeInfo.authors;
             publisher2 = item2.volumeInfo.publisher;
@@ -87,22 +87,22 @@ $(document).ready(function(){
     }
     // template for boostrap cards
     function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn, bookId){
-        var viewUrl = 'test.html?isbn=' + bookIsbn;
+        var viewUrl = 'book.html?isbn=' + bookIsbn; //link for bookviewer
         var htmlCard = 
         `<div class="col-lg-6">
             <div class="card" style=" ">
                 <div class="row no-gutters">
                 <div class="col-md-4">
-                    <img src="${bookImg}" class="card-img" alt="...">
+                    <a href="/info/${bookId}"><img src="${bookImg}" class="card-img" alt="..."></a>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
                     <span id="book_id" hidden>${bookId}</span>
-                    <h5 class="card-title">${title}</h5>
+                    <a href="/info/${bookId}"><h5 class="card-title">${title}</h5></a>
                     <p class="card-text">Author: ${author}</p>
                     <p class="card-text">Publisher: ${publisher}</p>
                     <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-                    <button class="btn btn-outline-primary" onClick="add_from_search('${bookId}')">Add To Collection</button>
+                    <button id="add_book" class="btn btn-outline-primary" onClick="add_from_search('${bookId}')">Add To Collection</button>
                     </div>
                 </div>
                 </div>
@@ -118,9 +118,11 @@ $(document).ready(function(){
 
 function add_from_search(bookId) { 
     $.ajax({
-        url: "/books/add/" + bookId + "",
-        success: function (response){   
+        url: "/add/" + bookId + "",
+        success: function (response){ 
+            $('#add_book').attr('hidden');  
             return response
+            
         },
         error: function (response) {
             // alert the error if any error occured

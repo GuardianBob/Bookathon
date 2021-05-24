@@ -13,7 +13,7 @@ from django.template import Context
 def index(request):
     # This is intended for a welcome splash page
     # Currently this redirects to the books homepage if a user is logged in or the login page if they are not
-    return redirect('/books')
+    return redirect('/')
 
 def login(request, login_form=Login_Form()):
     context = {
