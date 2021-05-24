@@ -87,7 +87,7 @@ $(document).ready(function(){
     }
     // template for boostrap cards
     function formatOutput(bookImg, title, author, publisher, bookLink, bookIsbn, bookId){
-        var viewUrl = 'test.html?isbn=' + bookIsbn;
+        var viewUrl = 'book.html?isbn=' + bookIsbn; //link for bookviewer
         var htmlCard = 
         `<div class="col-lg-6">
             <div class="card" style=" ">
