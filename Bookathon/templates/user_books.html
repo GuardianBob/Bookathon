@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main %}
+    <div class="container"> 
+        <div class="row justify-content-left ">
+            <div class="col-md-5 mt-4">
+                <h5>User Name: {{ user.username }}</h5>
+                <p><b>Email:</b> {{ user.email }}</p>
+                <p><b>Total Reviews:</b> {{ reviews|length }}</p>
+                <!-- <ul style="max-height: 400px; overflow-y: auto; overflow-x:hidden;" class="list-group list-group-flush">
+                    <p><b>Posted reviews on the following books:</b></p>
+                    <div class="ml-2">
+                        {% for book in books %}
+                            <li class="list-group-item">
+                                <a href="/cl/info/{{review.book.google_id}}">{{review.book.title}}</a>                                
+                            </li>
+                        {% endfor %}
+                    </div> -->
+                </ul>
+            </div> 
+            <div class="col-md-7 mt-4">
+                <h4>Book Collection:</h4>
+                <div class="embed-responsive align-items-start overflow-x:hidden" rows="4" style="max-height: 480px; overflow-y: auto;">
+                    <!-- <ul class="list-group list-group-flush ">
+                        {% for book in books %}                        
+                            <li class="list-group-item"><a href="{% url 'book_info' book.google_id %}">{{ book.title }}</a></li>
+                        {% endfor %}
+                    </ul>  -->
+                    <table class="table table-striped">                        
+                        <tbody id="shift_counts">       
+                            {% for book in books %}
+                                <tr>
+                                    <td><a href="{% url 'book_info' book.google_id %}">{{ book.title }}</a></td>
+                                    <td><a href="#">Remove</a></td>
+                                    <td>{{ val.year }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>       
+                </div>         
+            </div>                     
+        </div>
+    </div>
+{% endblock %}

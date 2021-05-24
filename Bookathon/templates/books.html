@@ -12,7 +12,7 @@
                 <ul class="list-group list-group-flush">
                     {% for review in reviews %}
                         <li class="list-group-item">
-                            <span><a href="{% url 'book_info' review.book.id %}">{{review.book.title}}</a></span><br>
+                            <span><a href="{% url 'book_info' review.book.google_id %}">{{review.book.title}}</a></span><br>
                             <span>Rating: </span>
                             {% with ''|center:review.rating as range %}
                                 {% for _ in range %}
@@ -32,7 +32,7 @@
                 <div class="embed-responsive align-items-start overflow-x:hidden" rows="4" style="max-height: 480px; overflow-y: auto;">
                     <ul class="list-group list-group-flush ">
                         {% for book in books %}                        
-                            <li class="list-group-item"><a href="{% url 'book_info' book.id %}">{{ book.title }}</a></li>
+                            <li class="list-group-item"><a href="{% url 'book_info' book.google_id %}">{{ book.title }}</a></li>
                         {% endfor %}
                     </ul>        
                 </div>         

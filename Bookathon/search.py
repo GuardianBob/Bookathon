@@ -44,7 +44,7 @@ def parse_book_info(url):
             'json_link': data['selfLink'],
             'google_link': data['volumeInfo']['previewLink'],
             'description': data['volumeInfo']['description'],
-            'categories': data['volumeInfo']['categories'],
+            # 'categories': data['volumeInfo']['categories'],
             'avg_rating': data['volumeInfo']['averageRating'],
             'total_ratings': data['volumeInfo']['ratingsCount'],
         }
