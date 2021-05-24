@@ -17,7 +17,8 @@ urlpatterns = [
     path('books/delete/<int:review_id>', views.del_review, name="delete_review"), # called when a user clicks to remove their review
     path('cl/<str:page>/<int:book_id>', views.clear, name="clear_errors"), # old workaround that may no longer be necessary (depreciated)
     # **********************************************************************
-    path('books/test', views.test, name="test"),
+    # path('books/test', views.test, name="test"),
+    path('books/book.html', views.book, name="book"),
     path('books/search', views.search, name="search"),
     path('books/test_search', views.book_query, name="test_search"),
     path('books/json/<str:book_id>', views.get_book_info, name="fetch_book"),
