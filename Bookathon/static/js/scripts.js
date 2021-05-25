@@ -18,7 +18,7 @@ function add_from_search(bookId) {
     $.ajax({
         url: "/add/" + bookId + "",
         success: function (response){   
-            $('#add_book').attr('hidden');
+            $('#add_book').hide();
             return response
         },
         error: function (response) {

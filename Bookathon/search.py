@@ -1,4 +1,4 @@
-import json, urllib.request
+import json, urllib.request, ssl
 import requests
 from googleapiclient.discovery import build
 from django.conf import settings
@@ -30,7 +30,10 @@ def get_books_data(query):
     return book_list   
 
 def parse_book_info(url):
-    with urllib.request.urlopen(f"{url}") as url:
+    data_keys = {'title' : 'title', 'google_link':'previewLink', 'description':'description', 
+    'categories':'categories', 'avg_rating':'averageRating', 'total_ratings':'ratingsCount'}
+    context = ssl._create_unverified_context()
+    with urllib.request.urlopen(f"{url}", context=context) as url:
         data = json.loads(url.read().decode())
         # print(data['volumeInfo']['title'])
         authors = []
@@ -38,17 +41,37 @@ def parse_book_info(url):
             authors.append(author)
         book_info = {
             'id': data['id'],
-            'title': data['volumeInfo']['title'],
             'authors': authors,
             'posterImg': data['volumeInfo']['imageLinks']['thumbnail'],
             'json_link': data['selfLink'],
-            'google_link': data['volumeInfo']['previewLink'],
-            'description': data['volumeInfo']['description'],
-            # 'categories': data['volumeInfo']['categories'],
-            'avg_rating': data['volumeInfo']['averageRating'],
-            'total_ratings': data['volumeInfo']['ratingsCount'],
         }
+        # Calling JSON keys causes errors if they don't exist: this solves that.
+        for key, val in data_keys.items():
+            if val in data['volumeInfo']:
+                book_info.update({ f'{key}' : data['volumeInfo'][val], })
+        # print(book_info)
     return book_info
+
+# def parse_book_info(url):
+#     with urllib.request.urlopen(f"{url}") as url:
+#         data = json.loads(url.read().decode())
+#         # print(data['volumeInfo']['title'])
+#         authors = []
+#         for author in data['volumeInfo']['authors']:
+#             authors.append(author)
+#         book_info = {
+#             'id': data['id'],
+#             'title': data['volumeInfo']['title'],
+#             'authors': authors,
+#             'posterImg': data['volumeInfo']['imageLinks']['thumbnail'],
+#             'json_link': data['selfLink'],
+#             'google_link': data['volumeInfo']['previewLink'],
+#             'description': data['volumeInfo']['description'],
+#             # 'categories': data['volumeInfo']['categories'],
+#             'avg_rating': data['volumeInfo']['averageRating'],
+#             'total_ratings': data['volumeInfo']['ratingsCount'],
+#         }
+#     return book_info
 
 def search_filters(query):
     pass

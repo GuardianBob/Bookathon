@@ -25,4 +25,7 @@ urlpatterns = [
     path('add/<str:book_id>', views.add_from_search, name="add_from_search"),
     path('remove/<str:book_id', views.remove_book, name="remove_book"),
 
+    # ********************** Testing ***************************************
+
+    path('signin', views.signin, name="signin"),
 ]

@@ -170,9 +170,9 @@ def newBook(request):
 def add_book(request, book):
     if validate_user(request) is False:
         return redirect('/login')        
-    collected_book = check_book(request, book.google_id)
+    collected_book = check_book(request, book)
     collected_book.collection.add(request.user)
-    return 
+    return collected_book
 
 
 # called when a user wants to delete their own review
@@ -255,6 +255,11 @@ def add_from_search(request, book_id):
     add_book(request, book_info)
     
     return HttpResponse('Ok!')
+
+# ************* Testing *****************************
+
+def signin(request):
+    return render(request, 'signin.html')
 
 
 
