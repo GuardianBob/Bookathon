@@ -270,5 +270,10 @@ def add_from_search(request, book_id):
     
     return HttpResponse('Ok!')
 
+# ************* Testing *****************************
+
+def signin(request):
+    return render(request, 'signin.html')
+
 
 
