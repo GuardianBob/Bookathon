@@ -3,27 +3,31 @@
 {% load static %}
     
 {% block title %}
-<title>{{book.title}}</title>
+<title>{{book_info.title}}</title>
 {% endblock %}
 
 {% block main %}    
     <div class="container"> 
         <div class="row justify-content-lg-around">
             <div class="col-lg-4 mt-4">
-                <h4>{{ book.title }}</h4>
-                <img src="{{ book_info.posterImg }}" width=300px alt="{{ book.google_id }}">                            
+                <h4>{{ book_info.title }}</h4>
+                <img src="{{ book_info.posterImg }}" width=300px alt="{{ book_info.id }}">                            
             </div>
             <div class="col-sm-8 mt-4">
                 <br>                
-                <span>Author: &nbsp {{ author }}</span><br>                
+                <span>Author: &nbsp {{ author }}</span><br>  
+                {% if avg_ratings in book_info %}              
                 {% with ''|center:book_info.avg_rating as range %}
                     {% for _ in range %}
                         <span class="fa fa-star checked" style="color:gold;"></span>
                     {% endfor %}
                 {% endwith %} 
+                {% endif %}
+                {% if total_ratings in book_info %}
                 <span class="ml-2">Total Ratings: {{book_info.total_ratings }} </span><br>
+                {% endif %}
                 {% if not in_collection is True %}
-                    <button class="btn btn-outline-primary" onClick="add_from_search('{{book_info.id}}')">Add To Collection</button>
+                    <button class="btn btn-outline-primary" onClick="add_from_search('{{book_info.id}}')" id="add_book">Add To Collection</button>
                 {% endif %}          
                 <h5>Description:</h5>
                 <p id="description"><span >{{ book_info.description }}</span></p>
@@ -35,7 +39,7 @@
                 <form action="{% url 'submit_update' book_info.id %}" method="post" class="form-group" name="update_submit">
                     {% csrf_token %}
                     {{ form }}
-                    <input type="hidden" name="book_id" value="{{book.id}}">
+                    <input type="hidden" name="book_id" value="{{book_info.id}}">
                     <input type="submit" value="Add" class="btn btn-outline-primary px-5 my-2 " id="submit">                    
                 </form>                
             </div>

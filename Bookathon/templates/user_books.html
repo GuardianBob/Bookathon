@@ -27,12 +27,12 @@
                         {% endfor %}
                     </ul>  -->
                     <table class="table table-striped">                        
-                        <tbody id="shift_counts">       
+                        <tbody id="book_list">       
                             {% for book in books %}
                                 <tr>
                                     <td><a href="{% url 'book_info' book.google_id %}">{{ book.title }}</a></td>
-                                    <td><a href="#">Remove</a></td>
-                                    <td>{{ val.year }}</td>
+                                    <td><a href="#" onclick="remove_from_collection('{{book.id}}')">Remove</a></td>
+                                    
                                 </tr>
                             {% endfor %}
                         </tbody>
