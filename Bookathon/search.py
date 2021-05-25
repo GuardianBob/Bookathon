@@ -3,6 +3,8 @@ import requests
 from googleapiclient.discovery import build
 from django.conf import settings
 
+
+
 def get_books_data(query):
     service = build('books', 'v1', developerKey=settings.BOOKS_API)   
 
@@ -31,25 +33,28 @@ def get_books_data(query):
 
 def parse_book_info(url):
     data_keys = {'title' : 'title', 'google_link':'previewLink', 'description':'description', 
+
     'categories':'categories', 'avg_rating':'averageRating', 'total_ratings':'ratingsCount'}
     context = ssl._create_unverified_context()
     with urllib.request.urlopen(f"{url}", context=context) as url:
+
         data = json.loads(url.read().decode())
         # print(data['volumeInfo']['title'])
         authors = []
-        for author in data['volumeInfo']['authors']:
-            authors.append(author)
+        if 'authors' in data['volumeInfo']:            
+            for author in data['volumeInfo']['authors']:
+                authors.append(author)
         book_info = {
             'id': data['id'],
             'authors': authors,
-            'posterImg': data['volumeInfo']['imageLinks']['thumbnail'],
             'json_link': data['selfLink'],
         }
+        if 'imageLinks' in data['volumeInfo']: book_info.update({'posterImg': data['volumeInfo']['imageLinks']['thumbnail'],})
         # Calling JSON keys causes errors if they don't exist: this solves that.
         for key, val in data_keys.items():
             if val in data['volumeInfo']:
                 book_info.update({ f'{key}' : data['volumeInfo'][val], })
-        # print(book_info)
+
     return book_info
 
 # def parse_book_info(url):

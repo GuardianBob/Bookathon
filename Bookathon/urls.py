@@ -16,14 +16,14 @@ urlpatterns = [
     path('users/books/<int:profile_id>', views.user_collection, name="user_collection"), # link to show a user's profile
     path('delete/<int:review_id>', views.del_review, name="delete_review"), # called when a user clicks to remove their review
     path('cl/<str:page>/<int:book_id>', views.clear, name="clear_errors"), # old workaround that may no longer be necessary (depreciated)
+    path('remove/<int:book_id>', views.remove_from_collection, name="remove_from_collection"), # called when a user clicks to remove their review
     # **********************************************************************
 #     path('test', views.test, name="test"),
-    path('books/book.html', views.book, name="book"),
+    path('book.html', views.book, name="book"),
     path('search', views.search, name="search"),
     path('test_search', views.book_query, name="test_search"),
     path('json/<str:book_id>', views.get_book_info, name="fetch_book"),
     path('add/<str:book_id>', views.add_from_search, name="add_from_search"),
-    path('remove/<str:book_id', views.remove_book, name="remove_book"),
 
     # ********************** Testing ***************************************
 

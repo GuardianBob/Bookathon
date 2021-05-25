@@ -59,7 +59,7 @@ class Book(models.Model):
     uploaded_by = models.ForeignKey(User, related_name='books_uploaded', on_delete=models.CASCADE)
     liked_by = models.ManyToManyField(User, related_name="favorite_books", blank=True)
     collection = models.ManyToManyField(User, related_name="collected_books", blank=True, default=0)
-    rating = models.IntegerField(blank=True)
+    rating = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = CheckBook()

@@ -72,7 +72,7 @@ def book_info(request, google_id, form=ReviewForm()):
     collected = False
     if len(Book.objects.filter(google_id=google_id).filter(collection=request.user)) > 0:
         collected = True
-    print(collected)
+    # print(collected)
     context = {
         "form": form,
         'book_info': book_info,
@@ -84,7 +84,7 @@ def book_info(request, google_id, form=ReviewForm()):
         book = Book.objects.get(google_id=google_id)
         reviews = Review.objects.filter(book=book)
         book = Book.objects.get(google_id=google_id)
-        author = Author.objects.get(books__id=book.id)  
+        author = Author.objects.get(books__id=book.id)
         context.update({
             "reviews": reviews, 
         })
@@ -203,15 +203,29 @@ def checkAuthor(authName):
 # Check if book exists in database
 def check_book(request, book):
     if not len(Book.objects.filter(google_id=book['id'])) > 0:
-        collected_book = Book.objects.create(title=book['title'], google_id=book['id'], rating=book['avg_rating'], uploaded_by=request.user)
+        collected_book = Book.objects.create(title=book['title'], google_id=book['id'], uploaded_by=request.user)
         author = checkAuthor(book['authors'][0])
         collected_book.authors.add(author)
     else:
         collected_book = Book.objects.get(google_id=book['id'])
     return collected_book
 
-def remove_book(request, book_id):
-    pass
+def remove_from_collection(request, book_id):
+    if validate_user(request) is False:
+        return redirect('/login')
+    book = Book.objects.get(id=book_id)
+    request.user.collected_books.remove(book)
+    book_list = request.user.collected_books.all()
+    books = []
+    for book in book_list:
+        books.append({
+            'id': book.id,
+            'title': book.title,
+            'google_id': book.google_id,
+        })
+    response = {'books': books}
+    print(books)
+    return JsonResponse(response)
 # ****************************************************************************
 def book(request):   
     return render(request, 'book.html')  #testing this one!!!
