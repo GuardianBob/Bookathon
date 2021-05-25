@@ -1,7 +1,7 @@
 $(document).ready(function(){
     var item, title, author, publisher, bookLink, bookImg;
     var outputList = document.getElementById("list-output");
-    var apiKey = "{{book_api}}";
+    // var apiKey = "{{book_api}}";
     var bookUrl = "https://www.googleapis.com/books/v1/volumes?q=";
     var placeHolder = "https://via.placeholder.com/150";
     var searchData;
@@ -25,7 +25,7 @@ $(document).ready(function(){
         else{
             // display searchData 
             // $.get("https://www.googleapis.com/books/v1/volumes?q="+searchData, getBookData()});
-            console.log(bookUrl + searchData)
+            // console.log(bookUrl + searchData)
             $.ajax({
                 url: bookUrl + searchData,  
                 dataType: "json", 
@@ -82,7 +82,7 @@ $(document).ready(function(){
                                     formatOutput(bookImg2, title2, author2, publisher2, bookLink2, bookIsbn2, id2) +
                                     '</div>';
 
-            console.log(outputList);
+            // console.log(outputList);
         }
     }
     // template for boostrap cards
@@ -116,17 +116,17 @@ $(document).ready(function(){
     }
 })
 
-function add_from_search(bookId) { 
-    $.ajax({
-        url: "/add/" + bookId + "",
-        success: function (response){ 
-            $('#add_book').attr('hidden');  
-            return response
+// function add_from_search(bookId) { 
+//     $.ajax({
+//         url: "/add/" + bookId + "",
+//         success: function (response){ 
+//             $('#add_book').attr('hidden');  
+//             return response
             
-        },
-        error: function (response) {
-            // alert the error if any error occured
-            console.log(response.responseJSON.errors)
-        }
-    });
-};
+//         },
+//         error: function (response) {
+//             // alert the error if any error occured
+//             console.log(response.responseJSON.errors)
+//         }
+//     });
+// };
