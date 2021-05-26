@@ -311,18 +311,8 @@ def follow_user(request, user_id):
             is_followed = False
         else:
             # print("check_failed")
-            add_follower(current_user, user_to_follow)
+            Followers.objects.create(user=current_user, following_user=user_to_follow)
             is_followed = True
         return redirect(f'/users/{user_id}')
     else:
         return redirect(f'/users/{user_id}')
-
-def add_follower(user, user_to_follow):
-    if not len(Followers.objects.filter(user=user)) > 0:
-        new_follower = Followers.objects.create(user=user, following_user=user_to_follow)
-        return new_follower
-    else:
-        follower = Followers.objects.get(user=user)
-        follower.following_user.add(user_to_follow)
-        follower.save()
-        return follower
