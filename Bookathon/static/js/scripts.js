@@ -54,6 +54,21 @@ function remove_from_collection(bookId) {
     });
 }
 
+function add_remove_friend(user_id) { 
+    $.ajax({
+        url: "/update_friend/" + user_id + "/follow",
+        success: function (response){   
+            $('#add_book').hide();
+            // console.log('added');
+            return response
+        },
+        error: function (response) {
+            // alert the error if any error occured
+            console.log(response.responseJSON.errors)
+        }
+    });
+};
+
 $(document).ready(function(){
     var descr = $('#description').text();
     descr.replace(/"/g, '');
