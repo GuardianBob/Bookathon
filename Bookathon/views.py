@@ -289,7 +289,14 @@ def add_from_search(request, book_id):
     
     return HttpResponse('Ok!')
 
+
+# ************* Testing *****************************
+
+def signin(request):
+    return render(request, 'signin.html')
+  
 # ====================================================== Following ======================================================
+
 
 def follow_user(request, user_id):
     if validate_user(request) is False:

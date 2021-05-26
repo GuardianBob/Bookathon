@@ -10,8 +10,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <script src="{% static 'js/nav.js' %}"></script> -->
     <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}">
     <title>User Registration and Login</title>
     <script type="text/javascript">
@@ -44,22 +42,45 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <div class="row mx-5">
-            <div class="col-md-4">
-                <h3>Registration</h3>          
-                <p>Already have an account? <a href="{% url 'login' %}">Log in.</a></p>                          
-                <form action="{% url 'validate_register' %}" method="post">
+    <section class="min-vh-100 py-5">
+        <div class="container">
+            <div class="row justify-content-center mb-md-6">
+            <div class="col-auto">
+                <a href="/">
+                    <!-- IMG ISN'T CONNECTING WITH STATIC-->
+                    <img src="../static/img/bookathon_logo_black.svg" alt="logo"> <!-- UPDATE ONCE HAVE THE LOGO IN SVG FORMAT--> 
+                </a>
+            </div>
+            </div>
+            <div class="row justify-content-center pt-6">
+            <div class="col-xl-4 col-lg-5 col-md-6">
+                <div class="text-center mb-4">
+                <h1 class="mb-1">Create Account</h1>
+                </div>
+                <br>
+                <form action="{% url 'validate_register' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ register_form }}
-                        <span class="errmsg" id="c_pass"></span></label><br>
-                        <input type="checkbox" onclick="showPass()">  Show Password <hr>
-                        <input type="submit" value="Register" class="px-2 my-2" id="submit" disabled>
+                            <span class="errmsg" id="c_pass"></span></label><br>
+                            <input type="checkbox" onclick="showPass()">  Show Password <hr>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn-block btn btn-primary" type="submit">Register</button>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="signup-agree">
+                        <label class="custom-control-label text-small text-muted" for="signup-agree">I agree to the <a href="#">Terms & Conditions</a></label>
+                    </div>
+                    <hr>
+                    <div class="text-center text-small text-muted">
+                        <span>Already have an account? <a href="{% url 'login' %}">Sign In</a>
+                        </span>
                     </div>
                 </form>
-            </div>            
+            </div>
+            </div>
         </div>
-    </div>
+    </section>
 </body>
 </html>

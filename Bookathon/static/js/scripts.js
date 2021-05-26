@@ -19,7 +19,7 @@ function add_from_search(bookId) {
         url: "/add/" + bookId + "",
         success: function (response){   
             $('#add_book').hide();
-            // console.log('added');
+
             return response
         },
         error: function (response) {
