@@ -1,8 +1,9 @@
-from django.db import models
-from django.contrib.auth.models import User
-# Create your models here.
-from django.db import models
+from django.db import models, connection
+from django.contrib.auth.models import User, AbstractUser
 # from loginApp.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 RATING_CHOICES = (
     ('1', 1), 
@@ -91,3 +92,11 @@ class Genre(models.Model):
     user = models.ManyToManyField(Book, related_name="genres_user", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+# ====================================================== Following ======================================================
+
+class Followers(models.Model):
+    user = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    following_user = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)

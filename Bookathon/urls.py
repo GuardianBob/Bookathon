@@ -24,5 +24,5 @@ urlpatterns = [
     path('test_search', views.book_query, name="test_search"),
     path('json/<str:book_id>', views.get_book_info, name="fetch_book"),
     path('add/<str:book_id>', views.add_from_search, name="add_from_search"),
-
+    path('follow/<int:user_id>', views.follow_user, name='follow'),    
 ]

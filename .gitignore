@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.zip
+Wireframe/bookathon Logo/__MACOSX/._bookathon Logo
+Wireframe/*

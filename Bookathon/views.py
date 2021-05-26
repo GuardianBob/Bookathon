@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book, Author, Review
+from .models import Book, Author, Review, Followers
 # from loginApp.models import User, Address
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
@@ -97,9 +97,28 @@ def user_info(request, profile_id):
         return redirect('/login')
     profile = User.objects.get(id=profile_id)
     reviews = Review.objects.filter(user=profile)
+    followers = {}
+    for user in profile.followers.all():
+        follower = User.objects.get(id=user.user_id)
+        followers.update( {follower.id : follower.username } )
+    following = {}
+    for user in profile.following.all():
+        follows = User.objects.get(id=user.following_user_id)
+        following.update( {follows.id : follows.username } )
+    is_followed = False
+    # print(followers, request.user.id)
+    if request.user.id in followers.keys():
+        is_followed=True
+    else:
+        is_followed=False
+
     context = {
-        'user': profile,
+        'user': request.user,
         'reviews': reviews,
+        'profile': profile,
+        'followers': followers, 
+        'following': following,
+        'is_followed':is_followed
     }
     return render(request, "user.html", context)
 
@@ -123,7 +142,7 @@ def update(request, google_id):
     form = ReviewForm(request.POST)
     if not form.is_valid():
         print('failed')    
-        return book_info(request, google_id, form) 
+        return book_info(request, google_id, form)
     # NOTE This passes the form data back to the info page and eliminates about 8-10 lines of code.
     # NOTE NOTE  This only works if "books" is removed from the update url otherwise it doubles "update" in the url
     else:
@@ -270,5 +289,33 @@ def add_from_search(request, book_id):
     
     return HttpResponse('Ok!')
 
+# ====================================================== Following ======================================================
 
+def follow_user(request, user_id):
+    if validate_user(request) is False:
+        return redirect('/login')
+    user_to_follow = User.objects.get(id=user_id)
+    current_user = User.objects.get(id=request.user.id)
+    is_followed = False
+    if user_to_follow != current_user:
+        if current_user.following.filter(following_user_id=user_to_follow.id).exists():
+            # print("check worked")
+            current_user.following.filter(following_user_id=user_to_follow.id).delete()
+            is_followed = False
+        else:
+            # print("check_failed")
+            add_follower(current_user, user_to_follow)
+            is_followed = True
+        return redirect(f'/users/{user_id}')
+    else:
+        return redirect(f'/users/{user_id}')
 
+def add_follower(user, user_to_follow):
+    if not len(Followers.objects.filter(user=user)) > 0:
+        new_follower = Followers.objects.create(user=user, following_user=user_to_follow)
+        return new_follower
+    else:
+        follower = Followers.objects.get(user=user)
+        follower.following_user.add(user_to_follow)
+        follower.save()
+        return follower
