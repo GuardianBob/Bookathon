@@ -4,11 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
 import bcrypt
-from .forms import Register_Form, Login_Form
+from .forms import Register_Form, Login_Form, UpdateUserForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.template.loader import get_template
 from django.template import Context
+from django.contrib.auth.decorators import login_required #NOT SURE ABOUT THIS, CHECK WITH JESSE!!!!
 
 def index(request):
     # This is intended for a welcome splash page

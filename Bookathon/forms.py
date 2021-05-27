@@ -1,4 +1,4 @@
-from .models import Book, Author, Review
+from .models import Book, Author, Review, Profile
 # from loginApp.models import User
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -260,3 +260,9 @@ class UpdatePasswordForm(forms.Form):
             'id': 'user_id',
         })
         self.fields['password'].l
+
+# ========= ProfileUpdateForm to update image ==========================
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']

@@ -4,7 +4,7 @@ from .models import Book, Author, Review, Followers
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.core import serializers
-from .forms import BookForm, ReviewForm
+from .forms import BookForm, ReviewForm, ProfileUpdateForm 
 from django.contrib import messages
 import bcrypt
 from django.utils import timezone
@@ -364,6 +364,7 @@ def add_from_search(request, book_id):
     
     return HttpResponse('Ok!')
 
+
 def get_book_img(request, book_id):
     # print(book_id)
     url = f"https://books.googleapis.com/books/v1/volumes/{book_id}"
@@ -377,7 +378,6 @@ def signin(request):
     return render(request, 'signin.html')
 
 # ====================================================== Following ======================================================
-
 
 def follow_user(request, user_id):
     if validate_user(request) is False:
@@ -397,3 +397,39 @@ def follow_user(request, user_id):
         return redirect(f'/users/{user_id}')
     else:
         return redirect(f'/users/{user_id}')
+
+# ***************************************** Testing ********************************************************************
+
+def profile(request):
+    context = {
+        'profile_form': ProfileUpdateForm() # ProfileUpdateForm is imported from forms.py
+    }
+    return render(request, 'profile.html', context)
+
+
+# ============= Profile Update here ================
+
+def profile(request):
+    if validate_user(request) is False:
+        return redirect('/login')
+    if request.method == 'POST':
+        # u_form = UpdateUserForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile) 
+        # if u_form.is_valid() and p_form.is_valid():
+        #     u_form.save()
+        #     p_form.save()
+        #     messages.success(request, f'Your account has been updated!')
+        #     return redirect('profile') # Redirect back to profile page
+
+    else:
+        # u_form = UpdateUserForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        # 'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'profile.html', context)
