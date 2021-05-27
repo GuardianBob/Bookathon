@@ -157,3 +157,4 @@ class UpdatePasswordForm(forms.Form):
                 f'Password cannot be the same as previous password.'])
 
         return self.cleaned_data
+

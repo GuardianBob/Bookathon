@@ -1,5 +1,7 @@
 from django.urls import path        # These are the standard imports
 from . import views, login
+from django.conf import settings
+from django.conf.urls.static import static
 
 # NOTE: "name" argument at the end of path allows for dynamic url generation in the templates
 # ex: In the template use "{% url 'add_book' %}".  This will generate a url to the correct path even if the
@@ -32,6 +34,6 @@ urlpatterns = [
 
     # ********************** Testing ***************************************
 
-    path('signin', views.signin, name="signin"),
+    path('profile', views.profile, name="profile"),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
