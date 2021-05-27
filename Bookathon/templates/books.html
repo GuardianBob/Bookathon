@@ -28,11 +28,11 @@
                 </ul>
             </div>
             <div class="col-md-6">
-                <h4>Other Books:</h4>
+                <h4>Recently Added Books:</h4>
                 <div class="embed-responsive align-items-start overflow-x:hidden" rows="4" style="max-height: 480px; overflow-y: auto;">
                     <ul class="list-group list-group-flush ">
                         {% for book in books %}                        
-                            <li class="list-group-item"><a href="{% url 'book_info' book.google_id %}">{{ book.title }} added by {{ book.uploaded_by }}</a></li>
+                            <li class="list-group-item"><a href="{% url 'user_profile' book.uploaded_by.id %}">{{ book.uploaded_by }}</a> added <a href="{% url 'book_info' book.google_id %}">{{ book.title }}</a></li>
                         {% endfor %}
                     </ul>        
                 </div>         

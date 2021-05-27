@@ -102,7 +102,7 @@ $(document).ready(function(){
                     <p class="card-text">Author: ${author}</p>
                     <p class="card-text">Publisher: ${publisher}</p>
                     <a target="_blank" href="${viewUrl}" class="btn btn-secondary">Read Book</a>
-                    <button id="add_book" class="btn btn-outline-primary" onClick="add_from_search('${bookId}')">Add To Collection</button>
+                    <button id="${bookId}" class="btn btn-outline-primary" onClick="add_from_search('${bookId}')">Add To Collection</button>
                     </div>
                 </div>
                 </div>

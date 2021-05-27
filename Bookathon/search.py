@@ -33,7 +33,6 @@ def get_books_data(query):
 
 def parse_book_info(url):
     data_keys = {'title' : 'title', 'google_link':'previewLink', 'description':'description', 
-
     'categories':'categories', 'avg_rating':'averageRating', 'total_ratings':'ratingsCount'}
     context = ssl._create_unverified_context()
     with urllib.request.urlopen(f"{url}", context=context) as url:
@@ -56,6 +55,7 @@ def parse_book_info(url):
                 book_info.update({ f'{key}' : data['volumeInfo'][val], })
 
     return book_info
+
 
 # def parse_book_info(url):
 #     with urllib.request.urlopen(f"{url}") as url:
