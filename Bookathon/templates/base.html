@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse justify-content-between" id="nav_menu">
                 <div class="navbar-brand align-center">          
                     <span id="title"><a class="nav-link text-dark" aria-current="page" href="{% url 'home' %}">
-                        <img src="../static/img/bookathon_logo_black.svg" height="40"  alt="logo"> 
+                        <img src="{% static 'img/bookathon_logo_black.svg' %}" height="40"  alt="logo"> 
                     </a></span>
                 </div>       
                 <ul class="navbar-nav align-center" id="nav_links">
@@ -35,6 +35,9 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" aria-current="page" href="{% url 'search' %}">Search</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" aria-current="page" href="{% url 'recent_activity' %}">Recent Activity</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <!-- Profile -->
@@ -42,8 +45,8 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li><a class="dropdown-item" href="{% url 'user_collection' user.id %}">My Collection</a></li>
-                            <li><a class="dropdown-item" href="#">My Favorites</a></li>
-                            <li><a class="dropdown-item" href="#">My Friends</a></li>
+                            <!-- <li><a class="dropdown-item" href="#">My Favorites</a></li> -->
+                            <li><a class="dropdown-item" href="#">Following</a></li>
                             <li><a class="dropdown-item" href="{% url 'user_profile' user.id %}">My Info</a></li>
                             <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                         </ul>

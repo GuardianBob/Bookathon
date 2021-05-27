@@ -61,6 +61,7 @@ class Book(models.Model):
     liked_by = models.ManyToManyField(User, related_name="favorite_books", blank=True)
     collection = models.ManyToManyField(User, related_name="collected_books", blank=True, default=0)
     rating = models.IntegerField(blank=True, null=True)
+    image_link = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = CheckBook()
@@ -75,7 +76,7 @@ class Author(models.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-
+        
 class Review(models.Model):
     review = models.TextField()
     rating = models.IntegerField(choices=RATING_CHOICES)

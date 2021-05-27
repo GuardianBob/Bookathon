@@ -9,7 +9,8 @@ from django.conf.urls.static import static
 # without having to update the path in each html page. 
 
 urlpatterns = [
-    path('', views.books, name="home"),  # Link to the home page
+    path('', views.home_page, name="home"),  # Link to the home page
+    path('activity', views.recent_activity, name="recent_activity"),
     path('add_book', views.add, name="add_book_page"), # link to add a new book
     path('new_book', views.newBook, name="submit_new_book"), # called from the form after adding a new book to enter the info into the database
     path('update/<str:google_id>', views.update, name="submit_update"), # called from the review form on a book's info page to add the new review
@@ -26,7 +27,9 @@ urlpatterns = [
     path('test_search', views.book_query, name="test_search"),
     path('json/<str:book_id>', views.get_book_info, name="fetch_book"),
     path('add/<str:book_id>', views.add_from_search, name="add_from_search"),
-    path('follow/<int:user_id>', views.follow_user, name='follow'),    
+    path('img/<str:book_id>', views.add_from_search, name="get_book_img"),
+    path('follow/<int:user_id>', views.follow_user, name='follow'),  
+    path('backend/updates/book_info', views.backend_update_book_info),  
 
 
     # ********************** Testing ***************************************

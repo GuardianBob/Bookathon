@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+    <title>Bookathon Home</title>    
+{% endblock %}
+
+{% block main %}
+    <div class="container">        
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                {% if users %}
+                <h4> You're not following anyone yet! </h4>
+                <h6> Check out what these users are reading: </h6>
+                <ul class="list-group list-group-flush">
+                    {% for user in users %}
+                    <li class="list-group-item"><a href="{% url 'user_collection' user.id %}">{{user.username}}</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <h4>Recent Activity:</h4>
+                {% endif %} 
+                {% for book in recent_books %}
+                <p><a href="{% url 'user_collection' book.uploaded_by.id %}">{{ book.uploaded_by.username }}: &nbsp</a> added: </p> 
+                <div class="row justify-content-left">
+                    <div class="col-sm-4">
+                        <p><a href="{% url 'book_info' book.google_id %}"><img src="{{ book.image_link }}" alt="{{ book.title }}" width="200px"></a></p>
+                    </div>
+                    <div class="col-sm-6">                        
+                        <a href="{% url 'book_info' book.google_id %}"><p>{{ book.title }}</p></a>
+                        {% for author in book.authors.all %}
+                            <p>By: {{ author.full_name }}</p>                            
+                        {% endfor %}
+                        {% if not book.rating is none %}
+                            <span>Rating: </span>
+                            {% with ''|center:book.rating as range %}
+                                {% for _ in range %}
+                                    <span class="fa fa-star checked" style="color:gold;"></span>
+                                {% endfor %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+                </div>  
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <h4>&nbsp</h4>
+                {% for review in recent_reviews %}
+                    <p><a href="{% url 'user_profile' review.user.id %}">{{ review.user.username }}: &nbsp</a> posted a review: </p> 
+                    <span><a href="{% url 'book_info' review.book.google_id %}">{{review.book.title}}</a></span><br>
+                    <span>Rating: </span>
+                    {% with ''|center:review.rating as range %}
+                        {% for _ in range %}
+                            <span class="fa fa-star checked" style="color:gold;"></span>
+                        {% endfor %}
+                    {% endwith %}
+                    <br>
+                    <span>{{ review.review }}</span><br>
+                    <span>Posted on {{ review.created_at|date:"F jS Y" }}</span>
+                {% endfor %}
+            </div>
+        </div>           
+    </div>
+{% endblock %}

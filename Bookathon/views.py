@@ -11,6 +11,7 @@ from django.utils import timezone
 from datetime import datetime, date
 from django.conf import settings
 from .search import get_books_data, parse_book_info
+from itertools import chain
 
 book_api = settings.BOOKS_API
 
@@ -39,15 +40,41 @@ def validate_user(request):
         return True
 
 # called as the index/home page
-def books(request):
+def home_page(request):
+    if validate_user(request) is False:  # Used to validate the user is logged in and set some request variables
+        return redirect('/login')
+    following = []
+    for user in request.user.following.all():
+        follows = User.objects.get(id=user.following_user_id)
+        following.append(follows)    
+    recent_books = Book.objects.filter(uploaded_by__in=following).order_by('-created_at') 
+    recent_reviews = Review.objects.filter(user__in=following).order_by('-created_at')
+    # recent_activity = list(chain(recent_books, recent_reviews))
+    recent_activity = sorted(chain(recent_books, recent_reviews), key=lambda instance: instance.created_at)
+    # print(recent_books[0].authors)
+    
+    context = {
+        'user': request.user,
+        'recent_books': recent_books, 
+        'recent_reviews': recent_reviews,
+        'recent_activity': recent_activity,
+    }
+    if not len(following) > 0:    
+        context.update({
+            'no_follow': "You're not following anyone yet",
+            'users': User.objects.all().exclude(id=request.user.id)
+        })   
+    return render(request, 'home.html', context)
+
+def recent_activity(request):
     if validate_user(request) is False:  # Used to validate the user is logged in and set some request variables
         return redirect('/login') 
     # print('books_user: ', request.user)
-    reviews = Review.objects.order_by('-created_at')[:3] # gets the 3 most recent reviews
+    reviews = Review.objects.order_by('-created_at')[:10] # gets the 3 most recent reviews
     context = {
         'reviews': reviews,
         "user": request.user,
-        'books': Book.objects.order_by('title')
+        'books': Book.objects.order_by('-created_at'),
     }
     return render(request, 'books.html', context)  
 
@@ -118,7 +145,8 @@ def user_info(request, profile_id):
         'profile': profile,
         'followers': followers, 
         'following': following,
-        'is_followed':is_followed
+        'is_followed':is_followed,
+        'book_count': Book.objects.filter(collection=profile).count(),
     }
     return render(request, "user.html", context)
 
@@ -126,10 +154,22 @@ def user_collection(request, profile_id):
     if validate_user(request) is False:
         return redirect('/login')
     profile = User.objects.get(id=profile_id)
-    books = Book.objects.filter(collection=profile)
+    books = Book.objects.filter(collection=profile).order_by('-created_at') 
+    is_followed = False
+    followers = {}
+    for user in profile.followers.all():
+        follower = User.objects.get(id=user.user_id)
+        followers.update( {follower.id : follower.username } )
+    
+    if request.user.id in followers.keys():
+        is_followed=True
+    else:
+        is_followed=False
+    
     context = {
-        'user': profile,
+        'profile': profile,
         'books': books,
+        'is_followed': is_followed,
     }
     return render(request, "user_books.html", context)
 
@@ -210,7 +250,7 @@ def checkAuthor(authName):
     fName = authName.split(" ", 1)[0]
     # tmp = authName.split(" ", 1)[1]
     # middle = tmp.rsplit(" ", 1)[0]
-    lName = authName.rsplit(" ", 1)[1]
+    lName = authName.split(" ", 1)[1]
     author_obj = Author.objects.filter(first_name__contains=fName).filter(last_name__contains=lName)
     # print(len(author_obj))
     if len(author_obj) > 0:
@@ -223,8 +263,14 @@ def checkAuthor(authName):
 def check_book(request, book):
     if not len(Book.objects.filter(google_id=book['id'])) > 0:
         collected_book = Book.objects.create(title=book['title'], google_id=book['id'], uploaded_by=request.user)
+        if 'posterImg' in book:
+            collected_book.image_link = book['posterImg']
+        if 'avg_rating' in book:
+            collected_book.rating = book['avg_rating']
         author = checkAuthor(book['authors'][0])
-        collected_book.authors.add(author)
+        # collected_book.authors.add(author)
+        author.books.add(collected_book)
+        collected_book.save()
     else:
         collected_book = Book.objects.get(google_id=book['id'])
     return collected_book
@@ -243,8 +289,37 @@ def remove_from_collection(request, book_id):
             'google_id': book.google_id,
         })
     response = {'books': books}
-    print(books)
+    # print(books)
     return JsonResponse(response)
+
+def backend_update_book_info(request):
+    if validate_user(request) is False:
+        return redirect('/login')   
+    books = Book.objects.filter(image_link=None)
+    for book in books:
+        # print(book.id)
+        update_book(request, book.id)
+    # print('success!')
+    return HttpResponse("Update Successful!")
+
+def update_book(request, book_id):
+    if validate_user(request) is False:
+        return redirect('/login')
+    update_book = Book.objects.get(id=book_id)     
+    book_info = get_book_info(update_book.google_id)   
+    if 'posterImg' in book_info:
+        # print(book_info['posterImg'])
+        update_book.image_link = book_info['posterImg']
+    if 'avg_rating' in book_info:
+        update_book.rating = book_info['avg_rating']
+    if 'authors' in book_info:
+        author = checkAuthor(book_info['authors'][0])
+        author.books.add(update_book)
+        # update_book.authors.add(author)
+    update_book.save()
+    return update_book
+
+
 # ****************************************************************************
 def book(request):   
     return render(request, 'book.html')  #testing this one!!!
@@ -288,7 +363,20 @@ def add_from_search(request, book_id):
     add_book(request, book_info)
     
     return HttpResponse('Ok!')
-  
+
+
+def get_book_img(request, book_id):
+    # print(book_id)
+    url = f"https://books.googleapis.com/books/v1/volumes/{book_id}"
+    book_info = parse_book_info(url)
+    response = {'book_info': book_info }
+    return JsonResponse(book_info)
+
+# ************* Testing *****************************
+
+def signin(request):
+    return render(request, 'signin.html')
+
 # ====================================================== Following ======================================================
 
 def follow_user(request, user_id):
