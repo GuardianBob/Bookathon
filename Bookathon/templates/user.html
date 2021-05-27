@@ -4,8 +4,24 @@
     <div class="container"> 
         <div class="row justify-content-left ">
             <div class="col-md-5 mt-4">
-                <h5>User Name: {{ profile.username }}</h5>
-                <p><b>Email:</b> {{ profile.email }}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>User Name: {{ profile.username }}</h5> 
+                        <!-- <p><b>Email:</b> {{ profile.email }}</p> -->
+                        <p><b>Books in collection:</b> <a href="{% url 'user_collection' profile.id %}">{{ book_count }}</a></p>  
+                    </div>
+                    <div class="col-md-6">
+                    {% if profile != request.user%}
+                        {% if is_followed %}
+                            <a href="{% url 'follow' profile.id %}" class="btn btn-outline-secondary">Unfollow</a>
+                        {% else %}
+                            <a href="{% url 'follow' profile.id %}" class="btn btn-outline-primary">Follow</a>
+                        {% endif %}
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 mt-4">
                 {% if profile == request.user%}
                 <span>Followers: {{followers|length }}</span>
                 <br>
@@ -19,17 +35,20 @@
                 <span>Followers: {{followers|length }}</span>
                 <br>
                 <span>Following: {{following|length }}</span>
+                
                 {% endif %}
                 <br><br>
-
-                {% if profile != request.user%}
-                {% if is_followed %}
-                    <a href="{% url 'follow' profile.id %}" class="btn btn-outline-secondary">Unfollow</a>
-                {% else %}
-                    <a href="{% url 'follow' profile.id %}" class="btn btn-outline-primary">Follow</a>
-                {% endif %}
-
-                {% endif %}
+            </div>
+        </div>
+        <div class="row justify-content-left ">
+            <div class="col-md-5 mt-4">  
+                <!-- {% if profile != request.user%}
+                    {% if is_followed %}
+                        <a href="{% url 'follow' profile.id %}" class="btn btn-outline-secondary">Unfollow</a>
+                    {% else %}
+                        <a href="{% url 'follow' profile.id %}" class="btn btn-outline-primary">Follow</a>
+                    {% endif %}
+                {% endif %} -->
                 <p><b>Total Reviews:</b> {{ reviews|length }}</p>
                 <ul style="max-height: 400px; overflow-y: auto; overflow-x:hidden;" class="list-group list-group-flush">
                     <p><b>Posted reviews on the following books:</b></p>
