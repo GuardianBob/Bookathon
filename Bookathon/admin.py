@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 from loginApp.models import User as U
-from Bookathon.models import Book, Author, Review, Genre
+from Bookathon.models import Book, Author, Review, Genre, Profile
+
 
 class UAdmin(admin.ModelAdmin):
     list_display = ["first_name", "last_name"]
@@ -22,3 +23,5 @@ admin.site.register(Review, ReviewAdmin)
 class GenreAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Genre, GenreAdmin)
+
+admin.site.register(Profile)
