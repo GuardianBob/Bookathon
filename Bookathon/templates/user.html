@@ -7,7 +7,7 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="{{ user.profile.image.url }}" class="rounded-circle" height="200" alt="user profile pic" loading="lazy"/>
+                        <img src="{{ profile.profile.image.url }}" class="rounded-circle" height="200" alt="user profile pic" loading="lazy"/>
                         <h5>User Name: {{ profile.username }}</h5> 
                         <p><b>Email:</b> {{ profile.email }}</p>
                         <p><b>Books in collection:</b> <a href="{% url 'user_collection' profile.id %}">{{ book_count }}</a></p>  
