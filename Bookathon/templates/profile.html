@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% block content %}
+
+{% block main %}
+<div class="container">
     <div class="content-section">
       <div class="media">
         <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
@@ -14,7 +15,7 @@
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="border-bottom mb-4">Profile Info</legend>
-            {{ u_form }} <!-- User form -->
+            <!-- {{ u_form }} User form -->
             {{ p_form }} <!-- Profile form -->
         </fieldset>
         <div class="form-group">
@@ -22,4 +23,5 @@
         </div>
     </form>
     </div>
-{% endblock content %}
+  </div>
+{% endblock %}

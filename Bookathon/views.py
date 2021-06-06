@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book, Author, Review, Followers
+from .models import Book, Author, Review, Followers, Profile
 # from loginApp.models import User, Address
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
