@@ -344,6 +344,7 @@ def get_book_info(book_id):
     # print(book_id)
     url = f"https://books.googleapis.com/books/v1/volumes/{book_id}"
     book_info = parse_book_info(url)
+    # print(book_info)
     return book_info
 
 def search(request): 
