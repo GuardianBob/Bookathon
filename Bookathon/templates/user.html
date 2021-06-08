@@ -4,14 +4,7 @@
     <div class="container"> 
         <div class="row justify-content-left ">
             <div class="col-md-5 mt-4">
-
                 <div class="row">
-                    <div class="col-md-6">
-                        <img src="{{ profile.profile.image.url }}" class="rounded-circle" height="200" alt="user profile pic" loading="lazy"/>
-                        <h5>User Name: {{ profile.username }}</h5> 
-                        <p><b>Email:</b> {{ profile.email }}</p>
-                        <p><b>Books in collection:</b> <a href="{% url 'user_collection' profile.id %}">{{ book_count }}</a></p>  
-                    </div>
                     <div class="col-md-6">
                     {% if profile != request.user%}
                         {% if is_followed %}
@@ -19,8 +12,18 @@
                         {% else %}
                             <a href="{% url 'follow' profile.id %}" class="btn btn-outline-primary">Follow</a>
                         {% endif %}
-                    {% endif %}
+                        {% endif %}
+                        <img src="{{ profile.profile.image.url }}" class="rounded-circle" height="200" alt="user profile pic" loading="lazy"/>
+                        {% if profile == request.user%}
+                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-info">Edit Profile</a>
+                        {% endif %}
+                        <h5>User Name: {{ profile.username }}</h5> 
+                        <p><b>Email:</b> {{ profile.email }}</p>
+                        <p><b>Books in collection:</b> <a href="{% url 'user_collection' profile.id %}">{{ book_count }}</a></p>  
                     </div>
+                    <!-- <div class="col-md-6">
+                    
+                    </div> -->
                 </div>
             </div>
             <div class="col-md-5 mt-4">

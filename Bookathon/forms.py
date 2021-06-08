@@ -1,7 +1,7 @@
 from .models import Book, Author, Review, Profile
 # from loginApp.models import User
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 import datetime, bcrypt
 from django.forms.widgets import TextInput
@@ -211,10 +211,9 @@ class Login_Form(forms.Form):
         return self.cleaned_data
 
 class UpdateUserForm(forms.Form):
-    first_name = forms.CharField(max_length=200, widget=forms.TextInput)
-    last_name = forms.CharField(max_length=200, widget=forms.TextInput)  
-    email = forms.EmailField(max_length=200, widget=forms.EmailInput)
-
+    first_name = forms.CharField(max_length=200, widget=forms.TextInput, required=False)
+    last_name = forms.CharField(max_length=200, widget=forms.TextInput, required=False)  
+    email = forms.EmailField(max_length=200, widget=forms.EmailInput, required=False)
     def __init__(self, *args, **kwargs):
         super(UpdateUserForm, self).__init__(*args, **kwargs)
         for name in self.fields.keys():
@@ -232,8 +231,7 @@ class UpdateUserForm(forms.Form):
         first_name = self.cleaned_data.get('first_name')
         last_name = self.cleaned_data.get('last_name')
         email = self.cleaned_data.get('email')
-                
-                
+
         return self.cleaned_data
 
 class UpdatePasswordForm(forms.Form):
@@ -259,10 +257,26 @@ class UpdatePasswordForm(forms.Form):
             'class' : 'form-control',
             'id': 'user_id',
         })
-        self.fields['password'].l
 
 # ========= ProfileUpdateForm to update image ==========================
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['image']
+    def __init__(self, *args, **kwargs):
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                'class' : 'form-control',
+            })
+        self.fields['image'].widget.attrs.update({
+            'class': 'form-control btn btn-outline-secondary'
+        })
+
+class PasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        self.fields['old_password'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control'

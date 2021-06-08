@@ -4,7 +4,7 @@ from .models import Book, Author, Review, Followers, Profile
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.core import serializers
-from .forms import BookForm, ReviewForm, ProfileUpdateForm 
+from .forms import BookForm, ReviewForm, ProfileUpdateForm, UpdateUserForm, PasswordChangeForm
 from django.contrib import messages
 import bcrypt
 from django.utils import timezone
@@ -401,36 +401,45 @@ def follow_user(request, user_id):
 
 # ***************************************** Testing ********************************************************************
 
-def profile(request):
-    context = {
-        'profile_form': ProfileUpdateForm() # ProfileUpdateForm is imported from forms.py
-    }
-    return render(request, 'profile.html', context)
-
 
 # ============= Profile Update here ================
 
-def profile(request):
+def edit_profile(request):
     if validate_user(request) is False:
         return redirect('/login')
-    if request.method == 'POST':
-        # u_form = UpdateUserForm(request.POST, instance=request.user)
-        p_form = ProfileUpdateForm(request.POST,
-                                   request.FILES,
-                                   instance=request.user.profile) 
-        # if u_form.is_valid() and p_form.is_valid():
-        #     u_form.save()
-        #     p_form.save()
-        #     messages.success(request, f'Your account has been updated!')
-        #     return redirect('profile') # Redirect back to profile page
-
-    else:
-        # u_form = UpdateUserForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-
+    u_form = UpdateUserForm({
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email,
+        })
+    p_form = ProfileUpdateForm(instance=request.user.profile)
     context = {
-        # 'u_form': u_form,
+        'u_form': u_form,
         'p_form': p_form
     }
-
     return render(request, 'profile.html', context)
+
+def update_profile(request):
+    if validate_user(request) is False:
+        return redirect('/login')    
+    u_form = UpdateUserForm(request.POST)
+    p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile) 
+    if not u_form.is_valid() and not p_form.is_valid():
+        context = {
+            'u_form': u_form,
+            'p_form': p_form
+        }
+        return render(request, 'profile.html', context)
+    else:
+        # u_form.save()
+        p_form.save()
+        print(request.POST)
+        user_obj = User.objects.get(id=request.user.id)
+        if request.POST['first_name'] != None or request.POST['first_name'] != "":
+            user_obj.first_name = request.POST['first_name']
+        if request.POST['last_name'] != None or request.POST['last_name'] != "":
+            user_obj.last_name = request.POST['last_name']
+        user_obj.email = request.POST['email']
+        user_obj.save()
+        messages.success(request, f'Your account has been updated!')
+        return redirect(f'/users/{request.user.id}') # Redirect back to profile page
