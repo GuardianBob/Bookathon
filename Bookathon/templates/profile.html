@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+<div class="container">
     <div class="content-section">
       <div class="row">
         <div class="col-md-5">
@@ -32,5 +33,18 @@
         </form>
       </div>
     </div> 
+      <!-- FORM HERE -->
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Profile Info</legend>
+            <!-- {{ u_form }} User form -->
+            {{ p_form }} <!-- Profile form -->
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
+    </div>
   </div>
 {% endblock %}

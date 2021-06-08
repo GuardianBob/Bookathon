@@ -6,7 +6,7 @@
             <div class="col-md-5 mt-4">
                 <div class="row">
                     <div class="col-md-6">
-                        {% if profile != request.user%}
+                    {% if profile != request.user%}
                         {% if is_followed %}
                             <a href="{% url 'follow' profile.id %}" class="btn btn-outline-secondary">Unfollow</a>
                         {% else %}
