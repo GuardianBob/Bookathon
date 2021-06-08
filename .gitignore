@@ -131,6 +131,6 @@ dmypy.json
 Wireframe/bookathon Logo/__MACOSX/._bookathon Logo
 Wireframe/*
 Bookathon/migrations/*
-*.JPG
+*.jpg
 *.png
 

@@ -16,15 +16,15 @@
             <div class="col-sm-8 mt-4">
                 <br>                
                 <span>Author: &nbsp {{ author }}</span><br>  
-                {% if avg_ratings in book_info %}              
+                {% if 'avg_rating' in book_info %}              
                 {% with ''|center:book_info.avg_rating as range %}
                     {% for _ in range %}
                         <span class="fa fa-star checked" style="color:gold;"></span>
                     {% endfor %}
                 {% endwith %} 
                 {% endif %}
-                {% if total_ratings in book_info %}
-                <span class="ml-2">Total Ratings: {{book_info.total_ratings }} </span><br>
+                {% if 'total_ratings' in book_info %}
+                <span class="ml-2">Total Ratings: {{ book_info.total_ratings }} </span><br>
                 {% endif %}
                 {% if not in_collection is True %}
                     <button class="btn btn-outline-primary" onClick="add_from_search('{{book_info.id}}')" id="{{book_info.id}}">Add To Collection</button>

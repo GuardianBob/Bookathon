@@ -21,11 +21,11 @@
                 {% endif %} 
                 {% for book in recent_books %}
                 <p><a href="{% url 'user_collection' book.uploaded_by.id %}">{{ book.uploaded_by.username }}: &nbsp</a> added: </p> 
-                <div class="row justify-content-left">
-                    <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-md-6">
                         <p><a href="{% url 'book_info' book.google_id %}"><img src="{{ book.image_link }}" alt="{{ book.title }}" width="200px"></a></p>
                     </div>
-                    <div class="col-sm-6">                        
+                    <div class="col-md-5">                        
                         <a href="{% url 'book_info' book.google_id %}"><p>{{ book.title }}</p></a>
                         {% for author in book.authors.all %}
                             <p>By: {{ author.full_name }}</p>                            
